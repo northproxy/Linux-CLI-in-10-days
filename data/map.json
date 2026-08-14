@@ -1,0 +1,46 @@
+{
+  "domains": [
+    {
+      "domain": "Filesystem",
+      "tasks": [
+        {
+          "task": "Copy a file",
+          "command": "cp",
+          "options": [
+            "-i",
+            "-v",
+            "-p"
+          ],
+          "example": "cp -v report.txt backup/"
+        },
+        {
+          "task": "Move or rename a file",
+          "command": "mv",
+          "options": [
+            "-i",
+            "-v"
+          ],
+          "example": "mv -v old.txt new.txt"
+        },
+        {
+          "task": "Create a directory",
+          "command": "mkdir",
+          "options": [
+            "-p",
+            "-v"
+          ],
+          "example": "mkdir -p projects/linux"
+        },
+        {
+          "task": "Remove a file",
+          "command": "rm",
+          "options": [
+            "-i",
+            "-v"
+          ],
+          "example": "rm -i old.txt"
+        }
+      ]
+    }
+  ]
+}
