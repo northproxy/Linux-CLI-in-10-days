@@ -1,0 +1,163 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #f5f5f5;
+}
+
+main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.command-cloud {
+  width: min(100% - 24px, 760px);
+  text-align: center;
+}
+
+.cloud-navigation {
+  min-height: 40px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.breadcrumb {
+  font-size: 0.95rem;
+  color: #bbb;
+}
+
+.back-button {
+  border: 0;
+  background: transparent;
+  color: #ddd;
+  font: inherit;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.back-button:hover {
+  color: #fff;
+}
+
+.cloud-nodes {
+  position: relative;
+  width: 560px;
+  height: 360px;
+  margin: 0 auto;
+}
+
+.command-node {
+  border: 1px solid #777;
+  background: #222;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.command-node:hover {
+  background: #333;
+  border-color: #bbb;
+}
+
+.main-command {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  z-index: 2;
+  display: block;
+  font-size: 2rem;
+  padding: 20px 28px;
+}
+
+.main-command:hover {
+  transform: translate(-50%, -50%) scale(1.04);
+}
+
+.command-variants {
+  position: absolute;
+  inset: 0;
+}
+
+.command-variants .command-node {
+  position: absolute;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
+
+.command-variants .command-node:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.command-node.is-previewed {
+  background: #333;
+  border-color: #ddd;
+  transform: translate(-50%, -50%) scale(1.04);
+}
+
+.cloud-tooltip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 300px;
+  padding: 9px 12px;
+  border: 1px solid #666;
+  border-radius: 8px;
+  background: #1b1b1b;
+  color: #f5f5f5;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  text-align: left;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.cloud-tooltip[hidden] {
+  display: none;
+}
+
+#command-result {
+  margin-top: 24px;
+  min-height: 54px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.back-button:focus-visible,
+.command-node:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+@media (max-width: 640px) {
+  .cloud-nodes {
+    width: 100%;
+    min-width: 0;
+    height: 340px;
+  }
+
+  .command-cloud {
+    width: min(100% - 24px, 560px);
+  }
+
+  .command-node {
+    padding: 10px 14px;
+  }
+
+  .main-command {
+    font-size: 1.6rem;
+  }
+}

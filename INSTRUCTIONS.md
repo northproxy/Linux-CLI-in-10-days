@@ -4,18 +4,17 @@
 
 This is a **learning + portfolio + publishing project**.
 
-The project has one knowledge base and three outputs:
+The project has one knowledge base with several views:
 
 ```text
 Linux CLI Knowledge
 ├── Learn Path
-├── Interactive Task Map
+├── Dynamic Command Cloud
+├── Task-oriented discovery
 └── Visual / Instagram Content
 ```
 
 The project must remain practical, compact, understandable, and easy to maintain.
-
----
 
 ## 2. Working language
 
@@ -23,8 +22,6 @@ The project must remain practical, compact, understandable, and easy to maintain
 - Repository documentation: **English**
 - Code comments and script headers: **English**
 - Instagram language: chosen per post
-
----
 
 ## 3. Working style
 
@@ -40,9 +37,19 @@ Typical session: about **2 hours**.
 
 Do not generate the whole project in advance.
 
-Work step by step and keep the user involved in the learning process.
+Work step by step and keep the learner involved.
 
----
+Use VS Code as the normal project workspace.
+
+For Linux practice, the current environment is:
+
+```text
+VS Code terminal
+      ↓ SSH
+Ubuntu 24.04 VM
+```
+
+Do not suggest PowerShell merely to inspect a file that can be opened directly in VS Code.
 
 ## 4. Teaching principle
 
@@ -69,8 +76,6 @@ Avoid:
 - long theory blocks;
 - introducing tools that are not needed yet.
 
----
-
 ## 5. Learn Path
 
 The 10-day course is:
@@ -91,7 +96,8 @@ Each lesson should normally include:
 ```text
 Goal
 Commands
-Concept
+Core concept
+Command Cloud context
 Visual
 Examples
 Practice
@@ -102,11 +108,81 @@ Command references
 
 Use `LESSON_TEMPLATE.md`.
 
----
+## 6. Dynamic Command Cloud principle
 
-## 6. Task Map principle
+The primary website interaction is a contextual knowledge cloud.
 
-The Task Map starts from the user's intent, not from the command name.
+Initial idea:
+
+```text
+                         grep
+              find                  ps
+
+        cd                                 curl
+
+                        LINUX
+
+        pwd                                ss
+
+              ls                    chmod
+                       cat
+```
+
+### Hover / tap
+
+Preview the next syntax and a short explanation.
+
+Example:
+
+```text
+ls -a
+Show all entries, including hidden files.
+```
+
+### Click / tap
+
+The selected node becomes the new center.
+
+Example:
+
+```text
+Linux → ls → -a / -l / -la / -h / -R
+```
+
+### Deeper context
+
+A meaningful variant may reveal related output concepts.
+
+Example:
+
+```text
+ls -l
+→ permissions
+→ owner
+→ group
+→ size
+→ modified
+```
+
+### Navigation
+
+Provide Back and/or breadcrumb context.
+
+Example:
+
+```text
+Linux › ls › -l
+```
+
+Do not display the entire graph at once.
+
+Show only a useful local context.
+
+Do not finalize a large data model until the small prototype works.
+
+## 7. Task-oriented discovery principle
+
+The project must also allow navigation from human intent:
 
 ```text
 Domain
@@ -115,7 +191,7 @@ Task
   ↓
 Command
   ↓
-Options
+Variant / option
   ↓
 Concrete syntax
 ```
@@ -124,15 +200,15 @@ Example:
 
 ```text
 Filesystem
-  ↓
-Copy a file
-  ↓
-cp
-  ↓
--v
-  ↓
-cp -v report.txt backup/
+→ Show hidden files
+→ ls
+→ -a
+→ ls -a
 ```
+
+The Command Cloud and Task Map must reuse the same underlying knowledge.
+
+## 8. Machine-readable knowledge
 
 Primary machine-readable source:
 
@@ -140,15 +216,13 @@ Primary machine-readable source:
 data/map.json
 ```
 
-Readable domain pages belong in:
+The final model should support relationships between commands, variants, tasks, meanings, and related concepts.
 
-```text
-map/
-```
+Do not populate the entire Linux command universe in advance.
 
----
+Validate the structure with a small working prototype first.
 
-## 7. Command reference rule
+## 9. Command reference rule
 
 Command-specific knowledge belongs in:
 
@@ -162,20 +236,19 @@ A command page should contain only what is useful for this project:
 
 - purpose;
 - syntax;
-- relevant options;
+- useful variants;
+- short hover/tap meanings;
 - examples;
 - input;
 - output;
 - safety note if necessary;
-- links to related tasks or lessons.
+- related tasks;
+- related concepts;
+- lesson links.
 
 Do not recreate full `man` pages.
 
-Lessons and map pages should link to command pages instead of duplicating detailed explanations.
-
----
-
-## 8. Website scope
+## 10. Website scope
 
 v1 uses only:
 
@@ -185,17 +258,12 @@ CSS
 vanilla JavaScript
 JSON
 Nginx
+HTTPS
 ```
 
-Do not introduce React, Vue, Node.js, databases, APIs, build systems, or frameworks unless the existing approach becomes genuinely insufficient.
+Do not introduce React, Vue, a Node.js application layer, databases, APIs, build systems, graph libraries, or frameworks unless the existing approach becomes genuinely insufficient.
 
 The website should remain understandable by reading its source files.
-
-Main interaction:
-
-```text
-Domain → Task → Command → Options → Concrete syntax
-```
 
 Website files belong in:
 
@@ -203,13 +271,9 @@ Website files belong in:
 site/
 ```
 
----
+## 11. Mandatory script header
 
-## 9. Mandatory script header
-
-Because this is a learning and portfolio project, **every script or executable source file must begin with a short project header**.
-
-The purpose is to make every file understandable without needing external context.
+Because this is a learning and portfolio project, every script or executable source file must begin with a short project header.
 
 The header must contain:
 
@@ -226,13 +290,14 @@ The header must contain:
  * Script: app.js
  *
  * Purpose:
- * Handles interaction with the Linux CLI Task Map.
+ * Renders and controls the interactive Linux CLI Command Cloud.
  *
  * Project:
  * Linux CLI in 10 Days — learning and portfolio project.
  *
  * Learning focus:
- * Vanilla JavaScript, JSON loading, DOM manipulation, and navigation logic.
+ * Vanilla JavaScript, JSON loading, DOM manipulation, interaction state,
+ * and contextual navigation.
  *
  * Lifecycle:
  * Permanent project component.
@@ -279,20 +344,11 @@ Permanent project component.
 # Temporary learning script.
 ```
 
-Use an appropriate comment format for the language.
+Do not add this header to Markdown, JSON, image assets, or ordinary configuration files unless comments are supported and useful.
 
-Do not add this header to:
+## 12. Lifecycle values
 
-- Markdown documentation;
-- JSON data;
-- static image assets;
-- ordinary configuration files unless comments are supported and useful.
-
----
-
-## 10. Lifecycle values
-
-Use simple lifecycle descriptions such as:
+Use simple descriptions such as:
 
 ```text
 Permanent project component.
@@ -302,25 +358,23 @@ Exercise-only script.
 Planned for removal after validation.
 ```
 
-If a script is temporary, its temporary nature should be explicit.
-
----
-
-## 11. Visual rule
+## 13. Visual rule
 
 Visuals are instructional assets, not decoration.
 
 Each visual should:
 
-- explain one concept;
+- explain one concept or context;
 - contain minimal text;
 - remain readable on mobile;
 - use exact command syntax;
+- show hierarchy or relationships clearly;
 - work on GitHub and the website;
 - be adaptable to Instagram.
 
 Prefer:
 
+- Command Clouds;
 - trees;
 - flows;
 - arrows;
@@ -328,38 +382,17 @@ Prefer:
 - task paths;
 - compact diagrams.
 
-Visual files belong in:
-
-```text
-images/diagrams/
-images/instagram/
-```
-
----
-
-## 12. Instagram rule
+## 14. Instagram rule
 
 Instagram is a publishing layer, not a separate knowledge base.
 
 Posts should be derived from finished project content.
 
-Preferred carousel structure:
-
-```text
-Slide 1 — task / hook
-Slide 2 — concept
-Slide 3 — command anatomy or flow
-Slide 4 — concrete command
-Slide 5 — recap or mini challenge
-```
+A Command Cloud state is a strong candidate for a carousel slide.
 
 Not every lesson needs an Instagram post.
 
-Publish only concepts that work well visually.
-
----
-
-## 13. Safety
+## 15. Safety
 
 Always warn before risky or destructive commands.
 
@@ -379,9 +412,9 @@ Practice dangerous commands only in a safe directory, VM, or disposable environm
 
 Never encourage blind execution of a command the learner does not understand.
 
----
+Safety warnings should also be available in the interactive UI before dangerous examples are followed.
 
-## 14. Documentation policy
+## 16. Documentation policy
 
 Update documentation only when something meaningful changes.
 
@@ -390,79 +423,80 @@ Use:
 - `PROJECT.md` — goals, scope, architecture
 - `ROADMAP.md` — progress and next work
 - `README.md` — public project overview
-- `KNOWLEDGE_MAP.md` — domain/task model
-- `WEBSITE.md` — website architecture and deployment
+- `KNOWLEDGE_MAP.md` — knowledge graph and navigation model
+- `WEBSITE.md` — website interaction, architecture, deployment
 - `VISUAL_GUIDE.md` — visual conventions
 - `SOCIAL_CONTENT.md` — publishing conventions
+- `LEARNING_LOG.md` — meaningful learning milestones, not every action
 
 Do not maintain a diary of every small step.
 
----
-
-## 15. Git policy
+## 17. Git policy
 
 Prefer meaningful medium-sized commits.
 
 Examples:
 
 ```text
-docs: complete day 02 file operations
-docs: add filesystem task map
-docs: add cp command reference
-feat: add interactive task navigation
+docs: define dynamic command cloud model
+feat: prototype linux to ls focus interaction
+docs: complete day 01 navigation
+feat: load command cloud from json
 docs: add permissions visual
 feat: deploy static site with nginx
 ```
 
-A commit should represent a coherent result, not every tiny edit.
+A commit should represent a coherent result.
 
----
-
-## 16. Definition of a completed lesson
+## 18. Definition of a completed lesson
 
 A lesson is complete when:
 
 - the learner understands the commands;
-- the practical exercise is completed;
+- practical exercises are completed;
 - command reference pages exist where needed;
-- the Task Map is updated;
+- relevant knowledge relationships are added to the validated model;
 - the visual adds real explanatory value;
 - the lesson is concise and readable;
 - `ROADMAP.md` is updated.
 
----
-
-## 17. Definition of v1 complete
+## 19. Definition of v1 complete
 
 v1 is complete when:
 
 - all 10 lessons are finished;
 - the final log-analysis exercise works;
-- the Task Map covers the main domains;
-- core command reference pages exist;
-- the static website navigates from task to command;
-- the site is deployed with Nginx;
-- HTTPS is configured;
-- the main visuals are complete;
+- core command references exist;
+- the Linux-centered Command Cloud works;
+- hover/tap previews work;
+- click/tap focus works;
+- Back/breadcrumb navigation works;
+- task-oriented discovery works;
+- JSON drives the interactive knowledge;
+- mobile behavior is usable;
+- the site is deployed with Nginx and HTTPS;
+- main visuals are complete;
 - at least one reusable Instagram carousel format exists;
-- README and internal links are consistent;
-- the repository can be understood without external explanation.
+- README and internal links are consistent.
 
----
+## 20. New chat start
 
-## 18. New chat start
-
-Use this message when starting a new ChatGPT project chat:
+Use:
 
 ```text
 We are continuing the Linux CLI in 10 Days project.
 
-Read PROJECT.md, ROADMAP.md, INSTRUCTIONS.md, KNOWLEDGE_MAP.md, and the relevant project files.
+Read PROJECT.md, ROADMAP.md, INSTRUCTIONS.md, KNOWLEDGE_MAP.md,
+WEBSITE.md, and the relevant project files.
 
 This is a learning and portfolio project.
 Work in medium-sized blocks.
 Do not document every small action.
 Do not build the whole project in advance.
+
+The website concept is a dynamic Linux CLI Command Cloud:
+hover/tap previews a node, click/tap changes focus, and the local cloud
+rebuilds around the selected command or concept.
 
 Every script must include the required project header from INSTRUCTIONS.md.
 

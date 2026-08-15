@@ -2,86 +2,197 @@
 
 ## Purpose
 
-Help users reach the correct Linux command from a real-world task.
+Represent Linux CLI knowledge as a connected graph that can be explored from different directions.
+
+The same knowledge should support:
+
+1. **Command Cloud exploration**
+2. **Task-oriented discovery**
+3. **10-day lessons**
+4. **command reference pages**
+5. **visual and Instagram content**
+
+## Primary interaction model — Command Cloud
+
+The website begins with Linux as the central concept.
 
 ```text
-DOMAIN
-  ↓
-TASK
-  ↓
-COMMAND
-  ↓
-OPTIONS
-  ↓
-CONCRETE SYNTAX
+                         grep
+              find                  ps
+
+        cd                                 curl
+
+                        LINUX
+
+        pwd                                ss
+
+              ls                    chmod
+                       cat
 ```
 
-## Main domains
+Commands around the center are smaller nodes.
+
+The exact layout can change dynamically.
+
+The purpose is not to show every command at once.
+
+The purpose is to show a useful local context.
+
+## Focus model
+
+Clicking a node makes it the new center.
+
+Example:
 
 ```text
-                         Linux CLI
-                             │
-      ┌──────────┬───────────┼───────────┬──────────┐
-      ↓          ↓           ↓           ↓          ↓
- Filesystem     Text       Search    Permissions  Processes
-      ↓          ↓           ↓           ↓          ↓
-   Network    Services     System     Archives   Integrity
+Linux
+  ↓
+ls
 ```
 
-## Example paths
+The cloud then changes to the context of `ls`:
+
+```text
+                         -a
+                -l               -h
+
+                         ls
+
+                -la              -R
+                         -t
+```
+
+The previous context should remain reachable through a Back action or breadcrumb.
+
+## Hover / tap preview
+
+A node should explain itself before the user commits to a deeper step.
+
+Hover example:
+
+```text
+ls -a
+Show all entries, including hidden files.
+```
+
+The preview should normally include:
+
+- next syntax;
+- short meaning;
+- safety note when relevant.
+
+Keep it short.
+
+Do not turn the tooltip into a manual page.
+
+## Deeper nodes
+
+Some command variants naturally reveal concepts contained in their output.
+
+Example:
+
+```text
+Linux
+→ ls
+→ -l
+→ permissions
+  owner
+  group
+  size
+  modified
+  filename
+```
+
+This allows the graph to connect commands with Linux concepts, not only with options.
+
+## Task-oriented entry
+
+Users may also start from intent:
+
+```text
+Domain
+  ↓
+Task
+  ↓
+Command
+  ↓
+Variant
+  ↓
+Concrete syntax
+```
+
+Example:
 
 ```text
 Filesystem
-→ Copy a file
-→ cp
-→ -v
-→ cp -v report.txt backup/
+→ Show hidden files
+→ ls
+→ -a
+→ ls -a
 ```
+
+This route should end at the same knowledge nodes used by the Command Cloud.
+
+## Conceptual node types
+
+The project may use node types such as:
 
 ```text
-Integrity
-→ Calculate SHA-256
-→ sha256sum
-→ FILE
-→ sha256sum ubuntu.iso
+root
+domain
+task
+command
+option
+variant
+syntax
+output-concept
+related-concept
 ```
+
+These are conceptual categories, not yet a frozen JSON schema.
+
+Do not finalize the schema until it is validated with the working `ls` prototype.
+
+## Relationship examples
 
 ```text
-Network
-→ Check listening ports
-→ ss
-→ -tulpn
-→ ss -tulpn
+Linux → ls
+ls → -a
+ls → -l
+ls + -a → ls -a
+ls -a → hidden files
+Filesystem → Show hidden files
+Show hidden files → ls -a
+ls -l → permissions
+ls -l → owner
+ls -l → size
 ```
 
-## Data model
+## Source of truth
 
-The interactive website should read from:
+Machine-readable relationships belong in:
 
 ```text
 data/map.json
 ```
 
-Conceptual structure:
+Detailed command explanations belong in:
 
-```json
-{
-  "domain": "Filesystem",
-  "tasks": [
-    {
-      "task": "Copy a file",
-      "command": "cp",
-      "options": ["-i", "-v", "-p"],
-      "example": "cp -v report.txt backup/"
-    }
-  ]
-}
+```text
+commands/<command>.md
 ```
 
-## Design rules
+Lessons should link to this knowledge instead of recreating large command descriptions.
 
-- Start with human intent.
-- Keep navigation shallow.
-- Do not duplicate command explanations.
-- Link final command nodes to command reference pages.
-- Add domains only when they improve navigation.
+## Navigation principles
+
+- The current focus is visually dominant.
+- Show only a useful local neighborhood.
+- Use font size, distance, and hierarchy to communicate importance.
+- Hover previews the next step.
+- Click changes focus.
+- Back/breadcrumb restores context.
+- Mobile tap must provide an equivalent interaction.
+- Do not duplicate knowledge between Command Cloud and Task Map.
+- Add nodes only when they improve understanding or navigation.
+- Dangerous commands must surface a safety warning before execution examples.

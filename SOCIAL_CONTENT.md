@@ -2,15 +2,36 @@
 
 ## Role
 
-Instagram is a distribution layer for finished Linux CLI concepts.
+Instagram is a publishing layer for finished Linux CLI concepts.
 
-It is not a separate curriculum.
+It is not a separate curriculum or knowledge base.
+
+## Strong content source
+
+The Command Cloud creates reusable visual states that can become social content.
+
+Examples:
+
+```text
+Linux → ls
+```
+
+```text
+ls → -a / -l / -la / -h / -R
+```
+
+```text
+ls -l → permissions / owner / group / size / modified
+```
+
+A static Instagram slide can capture one meaningful state of the interactive website.
 
 ## What to publish
 
 Good candidates:
 
-- one command with a strong practical use;
+- one Command Cloud focus state;
+- one command and its most useful variants;
 - one confusing concept explained visually;
 - one pipeline;
 - one permission pattern;
@@ -19,32 +40,38 @@ Good candidates:
 
 ## Carousel template
 
-### Slide 1
-Task or question.
+### Slide 1 — Hook
+
+A task or recognizable command.
 
 Example:
 
 ```text
-How do you count bots in an access log?
+You know `ls`.
+But what changes when you add `-a` or `-l`?
 ```
 
-### Slide 2
-Concept / flow.
+### Slide 2 — Command Cloud
 
-### Slide 3
-Command anatomy.
+Show `ls` in the center with useful options around it.
 
-### Slide 4
-Concrete command.
+### Slide 3 — Meaning
 
-### Slide 5
-Short recap or challenge.
+Explain two or three variants visually.
+
+### Slide 4 — Concrete terminal example
+
+Show exact syntax and representative output.
+
+### Slide 5 — Recap / mini challenge
+
+Ask the reader to predict which variant they need.
 
 ## Content rule
 
-The post must be derived from existing project content.
+Posts must be derived from existing project knowledge.
 
-Do not add knowledge only to Instagram without adding it to the repository when it belongs in the knowledge base.
+If a new technical fact belongs in the knowledge base, add it there before treating Instagram as its permanent home.
 
 ## Visual rule
 
@@ -53,8 +80,8 @@ Keep slides:
 - concise;
 - technically correct;
 - readable without zooming;
-- visually consistent;
-- useful even without a long caption.
+- visually consistent with the website;
+- useful without a long caption.
 
 ## Publishing frequency
 

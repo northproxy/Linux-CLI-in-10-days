@@ -1,44 +1,402 @@
 {
+  "cloud": {
+    "linux": {
+      "center": "LINUX",
+      "type": "root",
+      "nodes": [
+        {
+          "id": "pwd",
+          "label": "pwd",
+          "type": "command",
+          "description": "Print the current working directory."
+        },
+        {
+          "id": "cd",
+          "label": "cd",
+          "type": "command",
+          "description": "Change the current working directory."
+        },
+        {
+          "id": "ls",
+          "label": "ls",
+          "type": "command",
+          "description": "List directory contents.",
+          "target": "ls"
+        },
+        {
+          "id": "cat",
+          "label": "cat",
+          "type": "command",
+          "description": "Display file contents."
+        },
+        {
+          "id": "grep",
+          "label": "grep",
+          "type": "command",
+          "description": "Search text for matching patterns."
+        },
+        {
+          "id": "mkdir",
+          "label": "mkdir",
+          "type": "command",
+          "description": "Create directories.",
+          "target": "mkdir"
+        },
+        {
+          "id": "touch",
+          "label": "touch",
+          "type": "command",
+          "description": "Create an empty file or update a file timestamp.",
+          "target": "touch"
+        },
+        {
+          "id": "cp",
+          "label": "cp",
+          "type": "command",
+          "description": "Copy files or directories.",
+          "target": "cp"
+        },
+        {
+          "id": "mv",
+          "label": "mv",
+          "type": "command",
+          "description": "Move or rename files and directories.",
+          "target": "mv"
+        },
+        {
+          "id": "rm",
+          "label": "rm",
+          "type": "command",
+          "description": "Remove files. Use recursive removal with care.",
+          "target": "rm"
+        }
+      ]
+    },
+    "ls": {
+      "center": "ls",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "ls-a",
+          "label": "-a",
+          "type": "option",
+          "syntax": "ls -a",
+          "description": "Show all entries, including hidden files."
+        },
+        {
+          "id": "ls-l",
+          "label": "-l",
+          "type": "option",
+          "syntax": "ls -l",
+          "description": "Show a detailed long-format listing.",
+          "target": "ls-l"
+        },
+        {
+          "id": "ls-la",
+          "label": "-la",
+          "type": "variant",
+          "syntax": "ls -la",
+          "description": "Show a detailed listing including hidden files."
+        },
+        {
+          "id": "ls-h",
+          "label": "-h",
+          "type": "option",
+          "syntax": "ls -lh",
+          "description": "Show file sizes in human-readable form."
+        },
+        {
+          "id": "ls-R",
+          "label": "-R",
+          "type": "option",
+          "syntax": "ls -R",
+          "description": "List directories recursively."
+        }
+      ]
+    },
+    "ls-l": {
+      "center": "ls -l",
+      "type": "variant",
+      "nodes": [
+        {
+          "id": "permissions",
+          "label": "permissions",
+          "type": "output-concept",
+          "description": "Shows the file type and read, write, and execute permission bits."
+        },
+        {
+          "id": "owner",
+          "label": "owner",
+          "type": "output-concept",
+          "description": "Shows the user that owns the file or directory."
+        },
+        {
+          "id": "group",
+          "label": "group",
+          "type": "output-concept",
+          "description": "Shows the group associated with the file or directory."
+        },
+        {
+          "id": "size",
+          "label": "size",
+          "type": "output-concept",
+          "description": "Shows the file size in bytes unless another display option changes it."
+        },
+        {
+          "id": "modified",
+          "label": "modified",
+          "type": "output-concept",
+          "description": "Shows the last modification time."
+        },
+        {
+          "id": "filename",
+          "label": "filename",
+          "type": "output-concept",
+          "description": "Shows the file or directory name."
+        }
+      ]
+    },
+    "mkdir": {
+      "center": "mkdir",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "mkdir-basic",
+          "label": "directory",
+          "type": "syntax",
+          "syntax": "mkdir projects",
+          "description": "Create a new directory named projects."
+        },
+        {
+          "id": "mkdir-multiple",
+          "label": "multiple",
+          "type": "variant",
+          "syntax": "mkdir documents backups temp",
+          "description": "Create several directories with one command."
+        },
+        {
+          "id": "mkdir-p",
+          "label": "-p",
+          "type": "option",
+          "syntax": "mkdir -p documents/projects/linux",
+          "description": "Create missing parent directories along the path."
+        }
+      ]
+    },
+    "touch": {
+      "center": "touch",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "touch-basic",
+          "label": "file",
+          "type": "syntax",
+          "syntax": "touch notes.txt",
+          "description": "Create an empty file if it does not already exist."
+        },
+        {
+          "id": "touch-multiple",
+          "label": "multiple",
+          "type": "variant",
+          "syntax": "touch notes.txt todo.txt",
+          "description": "Create several empty files with one command."
+        },
+        {
+          "id": "touch-path",
+          "label": "path",
+          "type": "variant",
+          "syntax": "touch documents/report.txt",
+          "description": "Create a file at a path inside an existing directory."
+        }
+      ]
+    },
+    "cp": {
+      "center": "cp",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "cp-file-dir",
+          "label": "to directory",
+          "type": "variant",
+          "syntax": "cp notes.txt backups/",
+          "description": "Copy a file into another directory and keep its name."
+        },
+        {
+          "id": "cp-new-name",
+          "label": "new name",
+          "type": "variant",
+          "syntax": "cp report.txt report-copy.txt",
+          "description": "Copy a file and give the copy a different name."
+        },
+        {
+          "id": "cp-model",
+          "label": "source → destination",
+          "type": "syntax",
+          "syntax": "cp source destination",
+          "description": "cp reads a source path and writes a copy to the destination."
+        }
+      ]
+    },
+    "mv": {
+      "center": "mv",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "mv-move",
+          "label": "move",
+          "type": "variant",
+          "syntax": "mv todo.txt documents/",
+          "description": "Move an existing file into another directory."
+        },
+        {
+          "id": "mv-rename",
+          "label": "rename",
+          "type": "variant",
+          "syntax": "mv notes.txt notes-old.txt",
+          "description": "Rename an existing file."
+        },
+        {
+          "id": "mv-model",
+          "label": "source → destination",
+          "type": "syntax",
+          "syntax": "mv source destination",
+          "description": "mv changes the path or name of an existing object rather than creating a copy."
+        }
+      ]
+    },
+    "rm": {
+      "center": "rm",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "rm-file",
+          "label": "file",
+          "type": "syntax",
+          "syntax": "rm file.txt",
+          "description": "Remove a file. There is normally no recycle bin in this workflow."
+        },
+        {
+          "id": "rm-r",
+          "label": "-r",
+          "type": "option",
+          "syntax": "rm -r directory",
+          "description": "Recursively remove a directory and its contents. DANGEROUS: verify the path before running it."
+        },
+        {
+          "id": "rmdir",
+          "label": "rmdir",
+          "type": "related-concept",
+          "syntax": "rmdir empty-directory",
+          "description": "Remove an empty directory only."
+        }
+      ]
+    }
+  },
   "domains": [
     {
       "domain": "Filesystem",
       "tasks": [
         {
-          "task": "Copy a file",
-          "command": "cp",
-          "options": [
-            "-i",
-            "-v",
-            "-p"
-          ],
-          "example": "cp -v report.txt backup/"
+          "task": "Show the current directory",
+          "node": "pwd",
+          "command": "pwd",
+          "example": "pwd"
         },
         {
-          "task": "Move or rename a file",
-          "command": "mv",
+          "task": "Move to another directory",
+          "node": "cd",
+          "command": "cd",
+          "example": "cd /home/sadmin"
+        },
+        {
+          "task": "Move to the parent directory",
+          "node": "cd",
+          "command": "cd",
+          "example": "cd .."
+        },
+        {
+          "task": "Return to the home directory",
+          "node": "cd",
+          "command": "cd",
+          "example": "cd ~"
+        },
+        {
+          "task": "List directory contents",
+          "node": "ls",
+          "command": "ls",
+          "example": "ls"
+        },
+        {
+          "task": "Show hidden files",
+          "node": "ls-a",
+          "command": "ls",
           "options": [
-            "-i",
-            "-v"
+            "-a"
           ],
-          "example": "mv -v old.txt new.txt"
+          "example": "ls -a"
+        },
+        {
+          "task": "Show a detailed directory listing",
+          "node": "ls-l",
+          "command": "ls",
+          "options": [
+            "-l"
+          ],
+          "example": "ls -l"
         },
         {
           "task": "Create a directory",
+          "node": "mkdir",
+          "command": "mkdir",
+          "example": "mkdir projects"
+        },
+        {
+          "task": "Create nested directories",
+          "node": "mkdir-p",
           "command": "mkdir",
           "options": [
-            "-p",
-            "-v"
+            "-p"
           ],
-          "example": "mkdir -p projects/linux"
+          "example": "mkdir -p documents/projects/linux"
+        },
+        {
+          "task": "Create an empty file",
+          "node": "touch",
+          "command": "touch",
+          "example": "touch notes.txt"
+        },
+        {
+          "task": "Copy a file",
+          "node": "cp",
+          "command": "cp",
+          "example": "cp notes.txt backups/"
+        },
+        {
+          "task": "Move a file",
+          "node": "mv-move",
+          "command": "mv",
+          "example": "mv todo.txt documents/"
+        },
+        {
+          "task": "Rename a file",
+          "node": "mv-rename",
+          "command": "mv",
+          "example": "mv notes.txt notes-old.txt"
         },
         {
           "task": "Remove a file",
+          "node": "rm-file",
+          "command": "rm",
+          "example": "rm file.txt"
+        },
+        {
+          "task": "Remove a directory recursively",
+          "node": "rm-r",
           "command": "rm",
           "options": [
-            "-i",
-            "-v"
+            "-r"
           ],
-          "example": "rm -i old.txt"
+          "example": "rm -r backups"
         }
       ]
     }

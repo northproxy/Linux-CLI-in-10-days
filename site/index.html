@@ -6,10 +6,32 @@
   <link rel="stylesheet" href="style.css">
   <title>Linux CLI in 10 Days</title>
 </head>
-<body>
-  <h1>Linux CLI in 10 Days</h1>
 
-  <p>Task-oriented Linux command map.</p>
+<body>
+  <main>
+    <h1>Linux CLI Command Cloud</h1>
+
+    <section class="command-cloud">
+      <nav class="cloud-navigation" aria-label="Command Cloud navigation">
+        <button id="back-button" class="back-button" type="button" hidden>
+          ← Back
+        </button>
+
+        <div id="breadcrumb" class="breadcrumb">
+          Linux
+        </div>
+      </nav>
+
+      <div id="cloud-nodes" class="cloud-nodes">
+        <!-- JavaScript renders the current Command Cloud here. -->
+      </div>
+
+      <p id="command-result">
+        Select a command to explore.
+      </p>
+    </section>
+  </main>
+
   <script src="app.js"></script>
 </body>
 </html>
