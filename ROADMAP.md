@@ -90,9 +90,9 @@ For each day, complete one medium learning block:
 - [x] Complete Day 2 recap / self-check
 - [x] Create `day-02-files-directories.md`
 - [x] Create command references for `mkdir`, `touch`, `cp`, `mv`, `rm`
-- [ ] Add Day 2 knowledge to the validated cloud/map model
-- [ ] Add one useful Day 2 visual
-- [ ] Finalize Day 2 after Command Cloud / map update
+- [x] Add Day 2 knowledge to the validated cloud/map model
+- [x] Add one useful Day 2 visual
+- [x] Finalize Day 2 after Command Cloud / map update
 
 ### Day 1 current progress
 
