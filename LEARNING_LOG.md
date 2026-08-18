@@ -338,3 +338,68 @@ Next learning block:
 
 > Day 4 — Search: `grep`, `find`.
 
+---
+
+## Day 4 — Search completed
+
+### What I practiced
+
+- `grep`
+- `grep -i`
+- `grep -n`
+- `grep -v`
+- `grep -c`
+- `grep -E`
+- `grep -w`
+- `find`
+- `find -name`
+- `find -iname`
+- `find -type f`
+- `find -type d`
+
+### Practical environment
+
+Worked inside:
+
+```text
+/home/sadmin/linux-cli-day4
+```
+
+Used a small `app.log` plus nested `logs/`, `backups/`, and `notes/` directories to compare searching file contents with locating filesystem objects.
+
+### What I learned
+
+- `grep` searches file contents and returns matching lines.
+- `find` searches filesystem objects by properties such as name and type.
+- `grep -i` ignores letter case.
+- `grep -n` shows line numbers.
+- `grep -v` inverts the match.
+- `grep -c` counts matching lines.
+- `grep -E` allows extended patterns such as alternatives with `|`.
+- `grep -w` matches a whole word.
+- `find -name` is case-sensitive, while `find -iname` ignores case.
+- `find -type f` limits results to files and `find -type d` limits them to directories.
+- Quoting patterns such as `"*.log"` keeps the wildcard for `find` to interpret rather than letting the shell expand it first.
+
+The main mental model is:
+
+```text
+grep → search inside file contents
+find → search for filesystem objects
+```
+
+### Project integration
+
+- Added `day-04-search.md`.
+- Added command references for `grep` and `find`.
+- Added the `Search` domain to the grouped Command Cloud root.
+- Added contextual `grep` and `find` nodes and the practiced options to `data/map.json`.
+- Kept the cloud scoped to commands already introduced in the Learn Path.
+
+### Day 4 status
+
+Day 4 — Search is complete.
+
+Next learning block:
+
+> Day 5 — Pipes & Redirection: `|`, `>`, `>>`.

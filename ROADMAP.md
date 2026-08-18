@@ -49,7 +49,7 @@ Validated behavior:
 
 Next learning block:
 
-> Day 4 — Search (`grep`, `find`).
+> Day 5 — Pipes & Redirection (`|`, `>`, `>>`).
 
 Do not add all Linux commands before they are introduced or needed.
 
@@ -68,7 +68,7 @@ For each day, complete one medium learning block:
 - [x] Day 1 — Navigation
 - [x] Day 2 — Files & Directories
 - [x] Day 3 — Reading Files
-- [ ] Day 4 — Search
+- [x] Day 4 — Search
 - [ ] Day 5 — Pipes & Redirection
 - [ ] Day 6 — Text Processing
 - [ ] Day 7 — Permissions
@@ -94,6 +94,28 @@ For each day, complete one medium learning block:
 - [x] Add one useful Day 2 visual
 - [x] Finalize Day 2 after Command Cloud / map update
 
+
+
+### Day 4 current progress
+
+- [x] Practice `grep`
+- [x] Practice `grep -i`
+- [x] Practice `grep -n`
+- [x] Practice `grep -v`
+- [x] Practice `grep -c`
+- [x] Practice `grep -E`
+- [x] Practice `grep -w`
+- [x] Practice `find`
+- [x] Practice `find -name`
+- [x] Practice `find -iname`
+- [x] Practice `find -type f` and `find -type d`
+- [x] Understand content search (`grep`) vs filesystem-object search (`find`)
+- [x] Complete Day 4 recap / self-check
+- [x] Create `day-04-search.md`
+- [x] Create command references for `grep` and `find`
+- [x] Add `Search` domain and Day 4 command states to the Command Cloud data
+- [x] Validate Day 4 Search paths in the grouped cloud model
+- [x] Finalize Day 4
 
 ### Day 3 current progress
 
@@ -146,7 +168,7 @@ Main conceptual domains:
 
 - [ ] Filesystem
 - [ ] Text
-- [ ] Search
+- [x] Search
 - [ ] Permissions
 - [ ] Processes
 - [ ] Network

@@ -17,6 +17,13 @@
           "type": "domain",
           "description": "Read and inspect text file contents.",
           "target": "text"
+        },
+        {
+          "id": "search",
+          "label": "Search",
+          "type": "domain",
+          "description": "Search file contents and locate filesystem objects.",
+          "target": "search"
         }
       ]
     },
@@ -326,6 +333,102 @@
         }
       ]
     },
+    "grep": {
+      "center": "grep",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "grep-basic",
+          "label": "pattern",
+          "type": "syntax",
+          "syntax": "grep ERROR app.log",
+          "description": "Show lines in app.log that contain ERROR."
+        },
+        {
+          "id": "grep-i",
+          "label": "-i",
+          "type": "option",
+          "syntax": "grep -i error app.log",
+          "description": "Ignore letter case while matching."
+        },
+        {
+          "id": "grep-n",
+          "label": "-n",
+          "type": "option",
+          "syntax": "grep -n ERROR app.log",
+          "description": "Show the line number for each matching line."
+        },
+        {
+          "id": "grep-v",
+          "label": "-v",
+          "type": "option",
+          "syntax": "grep -v ERROR app.log",
+          "description": "Invert the match and show lines that do not contain ERROR."
+        },
+        {
+          "id": "grep-c",
+          "label": "-c",
+          "type": "option",
+          "syntax": "grep -c ERROR app.log",
+          "description": "Output the number of matching lines."
+        },
+        {
+          "id": "grep-E",
+          "label": "-E",
+          "type": "option",
+          "syntax": "grep -E \"ERROR|WARNING\" app.log",
+          "description": "Use an extended pattern to match alternatives such as ERROR or WARNING."
+        },
+        {
+          "id": "grep-w",
+          "label": "-w",
+          "type": "option",
+          "syntax": "grep -w INFO app.log",
+          "description": "Match INFO as a whole word."
+        }
+      ]
+    },
+    "find": {
+      "center": "find",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "find-name",
+          "label": "-name",
+          "type": "option",
+          "syntax": "find . -name \"app.log\"",
+          "description": "Search from the current directory downward for objects named app.log."
+        },
+        {
+          "id": "find-wildcard",
+          "label": "*.log",
+          "type": "variant",
+          "syntax": "find . -name \"*.log\"",
+          "description": "Find names ending in .log below the current directory."
+        },
+        {
+          "id": "find-iname",
+          "label": "-iname",
+          "type": "option",
+          "syntax": "find . -iname \"*.txt\"",
+          "description": "Match names without case sensitivity."
+        },
+        {
+          "id": "find-type-f",
+          "label": "-type f",
+          "type": "option",
+          "syntax": "find . -type f -name \"*.log\"",
+          "description": "Restrict the search to regular files."
+        },
+        {
+          "id": "find-type-d",
+          "label": "-type d",
+          "type": "option",
+          "syntax": "find . -type d",
+          "description": "Restrict the search to directories."
+        }
+      ]
+    },
     "filesystem": {
       "center": "Filesystem",
       "type": "domain",
@@ -417,6 +520,26 @@
           "type": "command",
           "description": "Display the end of a file or follow new lines.",
           "target": "tail"
+        }
+      ]
+    },
+    "search": {
+      "center": "Search",
+      "type": "domain",
+      "nodes": [
+        {
+          "id": "grep",
+          "label": "grep",
+          "type": "command",
+          "description": "Search text and output matching lines.",
+          "target": "grep"
+        },
+        {
+          "id": "find",
+          "label": "find",
+          "type": "command",
+          "description": "Search directory trees for matching files or directories.",
+          "target": "find"
         }
       ]
     }
@@ -570,6 +693,109 @@
             "-f"
           ],
           "example": "tail -f app.log"
+        }
+      ]
+    },
+    {
+      "domain": "Search",
+      "tasks": [
+        {
+          "task": "Find matching text in a file",
+          "node": "grep-basic",
+          "command": "grep",
+          "example": "grep ERROR app.log"
+        },
+        {
+          "task": "Search text without case sensitivity",
+          "node": "grep-i",
+          "command": "grep",
+          "options": [
+            "-i"
+          ],
+          "example": "grep -i error app.log"
+        },
+        {
+          "task": "Show line numbers for matches",
+          "node": "grep-n",
+          "command": "grep",
+          "options": [
+            "-n"
+          ],
+          "example": "grep -n ERROR app.log"
+        },
+        {
+          "task": "Show lines that do not match",
+          "node": "grep-v",
+          "command": "grep",
+          "options": [
+            "-v"
+          ],
+          "example": "grep -v ERROR app.log"
+        },
+        {
+          "task": "Count matching lines",
+          "node": "grep-c",
+          "command": "grep",
+          "options": [
+            "-c"
+          ],
+          "example": "grep -c ERROR app.log"
+        },
+        {
+          "task": "Search for alternative patterns",
+          "node": "grep-E",
+          "command": "grep",
+          "options": [
+            "-E"
+          ],
+          "example": "grep -E \"ERROR|WARNING\" app.log"
+        },
+        {
+          "task": "Find a file by name",
+          "node": "find-name",
+          "command": "find",
+          "options": [
+            "-name"
+          ],
+          "example": "find . -name \"app.log\""
+        },
+        {
+          "task": "Find files by extension",
+          "node": "find-wildcard",
+          "command": "find",
+          "options": [
+            "-name"
+          ],
+          "example": "find . -name \"*.log\""
+        },
+        {
+          "task": "Find names without case sensitivity",
+          "node": "find-iname",
+          "command": "find",
+          "options": [
+            "-iname"
+          ],
+          "example": "find . -iname \"*.txt\""
+        },
+        {
+          "task": "Find regular files only",
+          "node": "find-type-f",
+          "command": "find",
+          "options": [
+            "-type",
+            "f"
+          ],
+          "example": "find . -type f -name \"*.log\""
+        },
+        {
+          "task": "Find directories only",
+          "node": "find-type-d",
+          "command": "find",
+          "options": [
+            "-type",
+            "d"
+          ],
+          "example": "find . -type d"
         }
       ]
     }
