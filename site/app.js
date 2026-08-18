@@ -10,7 +10,9 @@
  * Learning focus:
  * Vanilla JavaScript, JSON loading, DOM manipulation, interaction state,
  * contextual navigation, touch interaction, radial positioning,
- * and desktop tooltip behavior.
+ * desktop tooltip behavior, pointer-reactive motion,
+ * focus-based color theming, whole-cloud parallax,
+ * magnetic pointer interaction, and dynamic connector lines.
  *
  * Lifecycle:
  * Permanent project component.
@@ -25,6 +27,38 @@ let cloudData = {};
 let currentFocus = "linux";
 const focusHistory = [];
 let previewedTouchNode = null;
+
+
+const commandThemes = {
+  pwd: "theme-sky",
+  cd: "theme-lilac",
+  ls: "theme-mint",
+  cat: "theme-peach",
+  grep: "theme-yellow",
+  mkdir: "theme-pink",
+  touch: "theme-aqua",
+  cp: "theme-lavender",
+  mv: "theme-sage",
+  rm: "theme-coral"
+};
+
+function getThemeClass(focusId = currentFocus) {
+  if (focusId === "linux") {
+    return "";
+  }
+
+  const rootCommand = focusId.split("-")[0];
+  return commandThemes[rootCommand] ?? "theme-neutral";
+}
+
+const motionState = {
+  pointerX: 0,
+  pointerY: 0,
+  inside: false,
+  animationFrameId: null,
+  cleanup: null
+};
+
 
 const usesTouchInteraction = window.matchMedia(
   "(hover: none), (pointer: coarse)"
@@ -68,6 +102,10 @@ function renderCloud() {
 
   const centerButton = document.createElement("button");
   centerButton.className = "command-node main-command";
+  const focusTheme = getThemeClass();
+  if (focusTheme) {
+    centerButton.classList.add(focusTheme);
+  }
   centerButton.textContent = view.center;
   cloudNodes.appendChild(centerButton);
 
@@ -79,6 +117,14 @@ function renderCloud() {
   view.nodes.forEach((node, index) => {
     const button = document.createElement("button");
     button.className = "command-node";
+
+    const nodeTheme =
+      currentFocus === "linux"
+        ? commandThemes[node.id] ?? "theme-neutral"
+        : focusTheme || "theme-neutral";
+
+    button.classList.add(nodeTheme);
+    button.style.setProperty("--enter-delay", `${index * 45}ms`);
     button.textContent = node.label;
 
     positionNode(button, index, nodeCount);
@@ -121,8 +167,244 @@ function renderCloud() {
   });
 
   cloudNodes.appendChild(surroundingNodes);
+  enableCloudMotion();
 }
 
+function enableCloudMotion() {
+  if (motionState.cleanup) {
+    motionState.cleanup();
+    motionState.cleanup = null;
+  }
+
+  if (motionState.animationFrameId) {
+    cancelAnimationFrame(motionState.animationFrameId);
+    motionState.animationFrameId = null;
+  }
+
+  cloudNodes.style.setProperty("--cloud-x", "0px");
+  cloudNodes.style.setProperty("--cloud-y", "0px");
+
+  const connectorLayer = createConnectorLayer();
+
+  if (usesTouchInteraction) {
+    updateConnectorLines(connectorLayer);
+    return;
+  }
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    updateConnectorLines(connectorLayer);
+    return;
+  }
+
+  const animatedNodes = [
+    ...cloudNodes.querySelectorAll(".command-variants .command-node")
+  ];
+
+  if (!animatedNodes.length) {
+    return;
+  }
+
+  animatedNodes.forEach((node) => {
+    node.dataset.motionPhase = String(Math.random() * Math.PI * 2);
+    node.dataset.motionRadius = String(3 + Math.random() * 4);
+    node.dataset.motionSpeed = String(0.0005 + Math.random() * 0.0006);
+    node.dataset.magnetX = "0";
+    node.dataset.magnetY = "0";
+  });
+
+  let cloudTargetX = 0;
+  let cloudTargetY = 0;
+  let cloudCurrentX = 0;
+  let cloudCurrentY = 0;
+
+  const handlePointerMove = (event) => {
+    const rect = cloudNodes.getBoundingClientRect();
+
+    motionState.pointerX = event.clientX - rect.left;
+    motionState.pointerY = event.clientY - rect.top;
+    motionState.inside = true;
+
+    const normalizedX = motionState.pointerX / rect.width - 0.5;
+    const normalizedY = motionState.pointerY / rect.height - 0.5;
+
+    cloudTargetX = normalizedX * 8;
+    cloudTargetY = normalizedY * 6;
+  };
+
+  const handlePointerLeave = () => {
+    motionState.inside = false;
+    cloudTargetX = 0;
+    cloudTargetY = 0;
+  };
+
+  cloudNodes.addEventListener("pointermove", handlePointerMove);
+  cloudNodes.addEventListener("pointerleave", handlePointerLeave);
+
+  motionState.cleanup = () => {
+    cloudNodes.removeEventListener("pointermove", handlePointerMove);
+    cloudNodes.removeEventListener("pointerleave", handlePointerLeave);
+  };
+
+  const animate = (time) => {
+    cloudCurrentX += (cloudTargetX - cloudCurrentX) * 0.05;
+    cloudCurrentY += (cloudTargetY - cloudCurrentY) * 0.05;
+
+    cloudNodes.style.setProperty("--cloud-x", `${cloudCurrentX.toFixed(2)}px`);
+    cloudNodes.style.setProperty("--cloud-y", `${cloudCurrentY.toFixed(2)}px`);
+
+    const cloudRect = cloudNodes.getBoundingClientRect();
+
+    animatedNodes.forEach((node) => {
+      const nodeRect = node.getBoundingClientRect();
+
+      const nodeCenterX =
+        nodeRect.left - cloudRect.left + nodeRect.width / 2;
+      const nodeCenterY =
+        nodeRect.top - cloudRect.top + nodeRect.height / 2;
+
+      const phase = Number(node.dataset.motionPhase);
+      const radius = Number(node.dataset.motionRadius);
+      const speed = Number(node.dataset.motionSpeed);
+
+      const floatX = Math.cos(time * speed + phase) * radius;
+      const floatY = Math.sin(time * speed + phase) * radius * 0.7;
+
+      let targetMagnetX = 0;
+      let targetMagnetY = 0;
+
+      if (motionState.inside) {
+        const dx = motionState.pointerX - nodeCenterX;
+        const dy = motionState.pointerY - nodeCenterY;
+        const distance = Math.hypot(dx, dy);
+
+        const influenceRadius = 145;
+        const maxPull = 46;
+
+        if (distance < influenceRadius) {
+          const strength = 1 - distance / influenceRadius;
+          const easedStrength = strength * strength;
+
+          targetMagnetX = Math.max(
+            -maxPull,
+            Math.min(maxPull, dx * easedStrength * 0.72)
+          );
+
+          targetMagnetY = Math.max(
+            -maxPull,
+            Math.min(maxPull, dy * easedStrength * 0.72)
+          );
+        }
+      }
+
+      const currentMagnetX = Number(node.dataset.magnetX || 0);
+      const currentMagnetY = Number(node.dataset.magnetY || 0);
+
+      const nextMagnetX =
+        currentMagnetX + (targetMagnetX - currentMagnetX) * 0.16;
+      const nextMagnetY =
+        currentMagnetY + (targetMagnetY - currentMagnetY) * 0.16;
+
+      node.dataset.magnetX = String(nextMagnetX);
+      node.dataset.magnetY = String(nextMagnetY);
+
+      node.style.setProperty(
+        "--motion-x",
+        `${(floatX + nextMagnetX).toFixed(2)}px`
+      );
+
+      node.style.setProperty(
+        "--motion-y",
+        `${(floatY + nextMagnetY).toFixed(2)}px`
+      );
+    });
+
+    updateConnectorLines(connectorLayer);
+    motionState.animationFrameId = requestAnimationFrame(animate);
+  };
+
+  motionState.animationFrameId = requestAnimationFrame(animate);
+}
+
+function createConnectorLayer() {
+  const existingLayer = cloudNodes.querySelector(".connector-layer");
+
+  if (existingLayer) {
+    existingLayer.remove();
+  }
+
+  const svg = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+
+  svg.classList.add("connector-layer");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+
+  const surroundingNodes = [
+    ...cloudNodes.querySelectorAll(".command-variants .command-node")
+  ];
+
+  surroundingNodes.forEach((node, index) => {
+    const line = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "line"
+    );
+
+    line.dataset.nodeIndex = String(index);
+    line.classList.add("connector-line");
+    svg.appendChild(line);
+  });
+
+  cloudNodes.prepend(svg);
+  return svg;
+}
+
+function updateConnectorLines(svg) {
+  if (!svg) {
+    return;
+  }
+
+  const centerNode = cloudNodes.querySelector(".main-command");
+  const surroundingNodes = [
+    ...cloudNodes.querySelectorAll(".command-variants .command-node")
+  ];
+  const lines = [...svg.querySelectorAll(".connector-line")];
+
+  if (!centerNode || !surroundingNodes.length) {
+    return;
+  }
+
+  const cloudRect = cloudNodes.getBoundingClientRect();
+  const centerRect = centerNode.getBoundingClientRect();
+
+  const centerX =
+    centerRect.left - cloudRect.left + centerRect.width / 2;
+  const centerY =
+    centerRect.top - cloudRect.top + centerRect.height / 2;
+
+  svg.setAttribute("viewBox", `0 0 ${cloudRect.width} ${cloudRect.height}`);
+
+  surroundingNodes.forEach((node, index) => {
+    const line = lines[index];
+
+    if (!line) {
+      return;
+    }
+
+    const nodeRect = node.getBoundingClientRect();
+
+    const nodeX =
+      nodeRect.left - cloudRect.left + nodeRect.width / 2;
+    const nodeY =
+      nodeRect.top - cloudRect.top + nodeRect.height / 2;
+
+    line.setAttribute("x1", centerX.toFixed(2));
+    line.setAttribute("y1", centerY.toFixed(2));
+    line.setAttribute("x2", nodeX.toFixed(2));
+    line.setAttribute("y2", nodeY.toFixed(2));
+  });
+}
 function positionNode(button, index, nodeCount) {
   const angleStep = (2 * Math.PI) / nodeCount;
   const startAngle = -Math.PI / 2;

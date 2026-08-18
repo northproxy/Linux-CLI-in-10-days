@@ -269,3 +269,72 @@ Day 2 — Files & Directories is complete.
 Next learning block:
 
 > Day 3 — Reading Files: `cat`, `less`, `head`, `tail`.
+
+---
+
+## Day 3 — Reading Files completed
+
+### What I practiced
+
+- `cat`
+- `less`
+- `head`
+- `tail`
+- `head -n N`
+- `tail -n N`
+- `tail -f`
+
+### Practical environment
+
+Worked inside:
+
+```text
+/home/sadmin/linux-cli-day3
+```
+
+Used:
+
+```text
+system-notes.txt
+app.log
+```
+
+### What I learned
+
+- `cat` is useful for printing the complete contents of a small file.
+- `less` is better for interactively browsing longer files.
+- `head` reads from the beginning of a file.
+- `tail` reads from the end of a file.
+- `-n N` controls how many lines `head` or `tail` displays.
+- `tail -f` follows a growing file and shows new lines as they are written.
+- `Ctrl+C` stops a running foreground command such as `tail -f`.
+- Log investigation often begins at the end of a file because recent events are appended there.
+
+### Live log experiment
+
+Used two SSH terminals:
+
+```text
+Terminal 1 → tail -f app.log
+Terminal 2 → append new log lines
+```
+
+Observed the new lines appear immediately in the first terminal.
+
+### Project integration
+
+- Added `cat`, `less`, `head`, and `tail` command references.
+- Added Day 3 focus states to `data/map.json`.
+- Added `head -n N`, `tail -n N`, and `tail -f` nodes.
+- Added task-oriented `Text` paths.
+- Validated the new command states in the interactive Command Cloud.
+- Added a Day 3 Reading Files visual.
+
+### Day 3 status
+
+Day 3 — Reading Files is complete.
+
+Next learning block:
+
+> Day 4 — Search: `grep`, `find`.
+

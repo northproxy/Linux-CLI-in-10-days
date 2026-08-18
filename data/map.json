@@ -27,7 +27,8 @@
           "id": "cat",
           "label": "cat",
           "type": "command",
-          "description": "Display file contents."
+          "description": "Display file contents.",
+          "target": "cat"
         },
         {
           "id": "grep",
@@ -69,6 +70,27 @@
           "type": "command",
           "description": "Remove files. Use recursive removal with care.",
           "target": "rm"
+        },
+        {
+          "id": "less",
+          "label": "less",
+          "type": "command",
+          "description": "Browse a text file interactively.",
+          "target": "less"
+        },
+        {
+          "id": "head",
+          "label": "head",
+          "type": "command",
+          "description": "Display the beginning of a file.",
+          "target": "head"
+        },
+        {
+          "id": "tail",
+          "label": "tail",
+          "type": "command",
+          "description": "Display the end of a file or follow new lines.",
+          "target": "tail"
         }
       ]
     },
@@ -290,6 +312,93 @@
           "description": "Remove an empty directory only."
         }
       ]
+    },
+    "cat": {
+      "center": "cat",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "cat-file",
+          "label": "whole file",
+          "type": "syntax",
+          "syntax": "cat system-notes.txt",
+          "description": "Display the complete contents of a small text file."
+        },
+        {
+          "id": "cat-model",
+          "label": "file → terminal",
+          "type": "related-concept",
+          "syntax": "cat FILE",
+          "description": "Read a file and write its complete contents to standard output."
+        }
+      ]
+    },
+    "less": {
+      "center": "less",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "less-file",
+          "label": "browse",
+          "type": "syntax",
+          "syntax": "less system-notes.txt",
+          "description": "Open a text file for interactive browsing."
+        },
+        {
+          "id": "less-quit",
+          "label": "q",
+          "type": "related-concept",
+          "syntax": "q",
+          "description": "Quit the less viewer and return to the shell."
+        }
+      ]
+    },
+    "head": {
+      "center": "head",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "head-default",
+          "label": "first 10",
+          "type": "syntax",
+          "syntax": "head FILE",
+          "description": "Show the first 10 lines of a file."
+        },
+        {
+          "id": "head-n",
+          "label": "-n N",
+          "type": "option",
+          "syntax": "head -n 3 app.log",
+          "description": "Show the first N lines of a file."
+        }
+      ]
+    },
+    "tail": {
+      "center": "tail",
+      "type": "command",
+      "nodes": [
+        {
+          "id": "tail-default",
+          "label": "last 10",
+          "type": "syntax",
+          "syntax": "tail FILE",
+          "description": "Show the last 10 lines of a file."
+        },
+        {
+          "id": "tail-n",
+          "label": "-n N",
+          "type": "option",
+          "syntax": "tail -n 3 app.log",
+          "description": "Show the last N lines of a file."
+        },
+        {
+          "id": "tail-f",
+          "label": "-f",
+          "type": "option",
+          "syntax": "tail -f app.log",
+          "description": "Follow a growing file and display new lines as they are written."
+        }
+      ]
     }
   },
   "domains": [
@@ -397,6 +506,50 @@
             "-r"
           ],
           "example": "rm -r backups"
+        }
+      ]
+    },
+    {
+      "domain": "Text",
+      "tasks": [
+        {
+          "task": "Read a small text file",
+          "node": "cat-file",
+          "command": "cat",
+          "example": "cat system-notes.txt"
+        },
+        {
+          "task": "Browse a long text file",
+          "node": "less-file",
+          "command": "less",
+          "example": "less system-notes.txt"
+        },
+        {
+          "task": "Show the first lines of a file",
+          "node": "head-n",
+          "command": "head",
+          "options": [
+            "-n"
+          ],
+          "example": "head -n 3 app.log"
+        },
+        {
+          "task": "Show the last lines of a file",
+          "node": "tail-n",
+          "command": "tail",
+          "options": [
+            "-n"
+          ],
+          "example": "tail -n 3 app.log"
+        },
+        {
+          "task": "Follow new log entries",
+          "node": "tail-f",
+          "command": "tail",
+          "options": [
+            "-f"
+          ],
+          "example": "tail -f app.log"
         }
       ]
     }

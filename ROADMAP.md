@@ -49,7 +49,7 @@ Validated behavior:
 
 Next learning block:
 
-> Day 2 — Files & Directories (`mkdir`, `touch`, `cp`, `mv`, `rm`).
+> Day 4 — Search (`grep`, `find`).
 
 Do not add all Linux commands before they are introduced or needed.
 
@@ -67,7 +67,7 @@ For each day, complete one medium learning block:
 
 - [x] Day 1 — Navigation
 - [x] Day 2 — Files & Directories
-- [ ] Day 3 — Reading Files
+- [x] Day 3 — Reading Files
 - [ ] Day 4 — Search
 - [ ] Day 5 — Pipes & Redirection
 - [ ] Day 6 — Text Processing
@@ -93,6 +93,26 @@ For each day, complete one medium learning block:
 - [x] Add Day 2 knowledge to the validated cloud/map model
 - [x] Add one useful Day 2 visual
 - [x] Finalize Day 2 after Command Cloud / map update
+
+
+### Day 3 current progress
+
+- [x] Practice `cat`
+- [x] Practice `less`
+- [x] Practice `head`
+- [x] Practice `tail`
+- [x] Practice `head -n N`
+- [x] Practice `tail -n N`
+- [x] Practice `tail -f`
+- [x] Understand whole file vs browsing vs beginning vs end
+- [x] Observe live log updates with `tail -f`
+- [x] Complete Day 3 recap / self-check
+- [x] Create `day-03-reading-files.md`
+- [x] Create command references for `cat`, `less`, `head`, `tail`
+- [x] Add Day 3 knowledge to the validated cloud/map model
+- [x] Add Day 3 task-oriented Text paths
+- [x] Add one useful Day 3 visual
+- [x] Finalize Day 3 after Command Cloud validation
 
 ### Day 1 current progress
 
