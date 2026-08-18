@@ -5,92 +5,18 @@
       "type": "root",
       "nodes": [
         {
-          "id": "pwd",
-          "label": "pwd",
-          "type": "command",
-          "description": "Print the current working directory."
+          "id": "filesystem",
+          "label": "Filesystem",
+          "type": "domain",
+          "description": "Navigate and manage files and directories.",
+          "target": "filesystem"
         },
         {
-          "id": "cd",
-          "label": "cd",
-          "type": "command",
-          "description": "Change the current working directory."
-        },
-        {
-          "id": "ls",
-          "label": "ls",
-          "type": "command",
-          "description": "List directory contents.",
-          "target": "ls"
-        },
-        {
-          "id": "cat",
-          "label": "cat",
-          "type": "command",
-          "description": "Display file contents.",
-          "target": "cat"
-        },
-        {
-          "id": "grep",
-          "label": "grep",
-          "type": "command",
-          "description": "Search text for matching patterns."
-        },
-        {
-          "id": "mkdir",
-          "label": "mkdir",
-          "type": "command",
-          "description": "Create directories.",
-          "target": "mkdir"
-        },
-        {
-          "id": "touch",
-          "label": "touch",
-          "type": "command",
-          "description": "Create an empty file or update a file timestamp.",
-          "target": "touch"
-        },
-        {
-          "id": "cp",
-          "label": "cp",
-          "type": "command",
-          "description": "Copy files or directories.",
-          "target": "cp"
-        },
-        {
-          "id": "mv",
-          "label": "mv",
-          "type": "command",
-          "description": "Move or rename files and directories.",
-          "target": "mv"
-        },
-        {
-          "id": "rm",
-          "label": "rm",
-          "type": "command",
-          "description": "Remove files. Use recursive removal with care.",
-          "target": "rm"
-        },
-        {
-          "id": "less",
-          "label": "less",
-          "type": "command",
-          "description": "Browse a text file interactively.",
-          "target": "less"
-        },
-        {
-          "id": "head",
-          "label": "head",
-          "type": "command",
-          "description": "Display the beginning of a file.",
-          "target": "head"
-        },
-        {
-          "id": "tail",
-          "label": "tail",
-          "type": "command",
-          "description": "Display the end of a file or follow new lines.",
-          "target": "tail"
+          "id": "text",
+          "label": "Text",
+          "type": "domain",
+          "description": "Read and inspect text file contents.",
+          "target": "text"
         }
       ]
     },
@@ -397,6 +323,100 @@
           "type": "option",
           "syntax": "tail -f app.log",
           "description": "Follow a growing file and display new lines as they are written."
+        }
+      ]
+    },
+    "filesystem": {
+      "center": "Filesystem",
+      "type": "domain",
+      "nodes": [
+        {
+          "id": "pwd",
+          "label": "pwd",
+          "type": "command",
+          "description": "Print the current working directory."
+        },
+        {
+          "id": "cd",
+          "label": "cd",
+          "type": "command",
+          "description": "Change the current working directory."
+        },
+        {
+          "id": "ls",
+          "label": "ls",
+          "type": "command",
+          "description": "List directory contents.",
+          "target": "ls"
+        },
+        {
+          "id": "mkdir",
+          "label": "mkdir",
+          "type": "command",
+          "description": "Create directories.",
+          "target": "mkdir"
+        },
+        {
+          "id": "touch",
+          "label": "touch",
+          "type": "command",
+          "description": "Create an empty file or update a file timestamp.",
+          "target": "touch"
+        },
+        {
+          "id": "cp",
+          "label": "cp",
+          "type": "command",
+          "description": "Copy files or directories.",
+          "target": "cp"
+        },
+        {
+          "id": "mv",
+          "label": "mv",
+          "type": "command",
+          "description": "Move or rename files and directories.",
+          "target": "mv"
+        },
+        {
+          "id": "rm",
+          "label": "rm",
+          "type": "command",
+          "description": "Remove files. Use recursive removal with care.",
+          "target": "rm"
+        }
+      ]
+    },
+    "text": {
+      "center": "Text",
+      "type": "domain",
+      "nodes": [
+        {
+          "id": "cat",
+          "label": "cat",
+          "type": "command",
+          "description": "Display file contents.",
+          "target": "cat"
+        },
+        {
+          "id": "less",
+          "label": "less",
+          "type": "command",
+          "description": "Browse a text file interactively.",
+          "target": "less"
+        },
+        {
+          "id": "head",
+          "label": "head",
+          "type": "command",
+          "description": "Display the beginning of a file.",
+          "target": "head"
+        },
+        {
+          "id": "tail",
+          "label": "tail",
+          "type": "command",
+          "description": "Display the end of a file or follow new lines.",
+          "target": "tail"
         }
       ]
     }
