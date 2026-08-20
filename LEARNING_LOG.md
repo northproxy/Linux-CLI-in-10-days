@@ -1070,3 +1070,65 @@ persistent focus
 
 Generalize the validated `Reading text` temporary-focus interaction to all eight functional root areas, then validate desktop readability/performance and revalidate touch behavior.
 
+---
+
+## Cards + Graph — layered knowledge interface validated
+
+_Status: current active website direction_
+
+### What changed
+
+After completing the Learn Path and validating the earlier radial / temporary-focus prototype, the website information architecture was reconsidered.
+
+The radial prototype was archived outside the active project.
+
+The current website direction is:
+
+```text
+Cards overview
+→ functional area
+→ command layer
+→ options / concepts
+→ optional deeper concept layer
+→ detail / syntax
+```
+
+### What was validated
+
+- Functional areas are shown as cards on the overview.
+- Clicking a card opens a local layered knowledge view.
+- `Cards + Graph` acts as Home.
+- Breadcrumb shows the persistent path.
+- Area title and command row share the top section.
+- The first `Options & concepts` region keeps stable height.
+- Hovering another command temporarily previews that command's children without changing persistent selection.
+- Leaving hover restores the selected command's children.
+- Selecting a new top-level command clears stale child and deeper state.
+- Meaningful paths can open one deeper layer, for example:
+
+```text
+ls
+→ -l
+→ permissions / owner / group / size / modified / filename
+```
+
+- During deep focus, sibling options remain visible but are dimmed.
+- Hovering a dimmed sibling restores it temporarily.
+- Clicking a dimmed sibling exits the deep branch and returns to the parent-command level.
+- The detail card uses a full-width square-cornered terminal-style syntax block.
+- The browser remains a static knowledge interface and does not execute real shell commands.
+
+### What I learned
+
+- A knowledge graph does not require a radial visual layout.
+- Stable regions reduce layout jumping during hover previews.
+- Temporary hover state and persistent click state should remain separate.
+- Clearing stale UI state when changing branches is essential in data-driven interfaces.
+- Deeper context is easier to follow when parent and sibling nodes remain visible.
+- The interface can preserve graph relationships while using a calmer layered visual structure.
+
+### Current status
+
+The Cards + Graph layered interface is the active implementation direction.
+
+The earlier radial / temporary-focus prototype remains useful portfolio evidence of design exploration, but it is no longer the architecture to generalize.

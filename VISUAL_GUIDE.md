@@ -4,7 +4,7 @@
 
 Create concise technical visuals that teach Linux CLI as a connected system.
 
-The website's main visual language is the **dynamic Command Cloud**.
+The website's main visual language is **Cards + Graph**: calm functional-area cards leading into layered local knowledge views.
 
 The same concepts can be adapted for:
 
@@ -22,94 +22,80 @@ The same concepts can be adapted for:
 - no decorative clutter;
 - relationships should be visible, not only listed.
 
-## Command Cloud hierarchy
+## Cards + Graph hierarchy
 
-### Root state
+### Overview
 
-`LINUX` is the largest central node.
-
-Descriptive functional areas surround it with smaller type. Prefer human-readable labels such as `Reading text`, `Text processing`, `Search`, `File operations`, `Permissions`, `Processes`, `Networking`, and `Services & logs` instead of exposing a flat root-level command list.
-
-Example:
+Use functional-area cards as the root visual structure.
 
 ```text
-                    Search
-
-      Reading text          Processes
-
-File operations      LINUX      Networking
-
-     Text processing      Permissions
-
-             Services & logs
+Reading text      Search
+Text processing   File operations
+Permissions       Processes
+Networking        Services & logs
 ```
 
+Do not require `LINUX` to be a central visual node.
 
-### Temporary hover-focus scene
+### Local area state
 
-When a functional area is hovered, the visual hierarchy temporarily changes.
-
-Validated direction:
+A selected area opens a layered local context:
 
 ```text
-hover Reading text
-
-Reading text
-→ moves toward the visual center
-
-cat / less / head / tail
-→ emerge as a directional command tail
-
-LINUX + other root areas
-→ move together away from the temporary focus
-→ fade progressively into background context
+File operations        COMMANDS
+                       pwd  ls  cd  mkdir  touch  cp  mv  rm
 ```
 
-Use thin animated lines to show parent-child relationships. The lines must remain underneath the focused node and stay attached while the node moves.
-
-Do not require `LINUX` to remain visually anchored during temporary focus. It remains the global conceptual root, but visually it may drift with the old context while the hovered functional area becomes dominant.
-
-When the user clicks the temporarily focused area:
+### First child layer
 
 ```text
-temporary tail fades out
-→ focused area finishes centering
-→ old root context fades out
-→ persistent child nodes appear again in a clean radial layout
+OPTIONS & CONCEPTS
+-a  -l  -la  -h  -R
 ```
 
-A hovered command may later reveal one additional option level, but avoid showing more than about two temporary graph levels at once.
-
-### Focus state
-
-When a command is selected, it becomes the visual center.
-
-Example:
-
-```text
-                         -a
-                -l               -h
-
-                         ls
-
-                -la              -R
-```
+This first child region should keep a stable visual height so lower content does not jump during hover previews.
 
 ### Deeper state
 
-A command variant can reveal output concepts:
+```text
+ls → -l
+
+-a  [-l]  -la  -h  -R
+      ↓
+permissions  owner  group  size  modified  filename
+```
+
+When one option is expanded:
+
+- keep the sibling options visible;
+- reduce their emphasis;
+- restore a sibling to normal emphasis on hover;
+- do not rely only on color for state.
+
+### Detail card
+
+Use a clear hierarchy:
 
 ```text
-                    permissions
+TYPE
+title
+short explanation
 
-          owner                    group
-
-                        ls -l
-
-          size                     modified
-
-                     filename
+terminal-style syntax
 ```
+
+The terminal-style syntax area:
+
+- spans the available detail-card width;
+- uses square corners;
+- is visually distinct from the surrounding white surface;
+- must not imply that commands are being executed in-browser.
+
+### Archived radial prototype
+
+The earlier radial / temporary-focus design is a validated experiment, not the active visual architecture.
+
+Do not generalize it unless the project direction is explicitly changed again.
 
 ## Hierarchy signals
 
@@ -137,11 +123,11 @@ Show all entries, including hidden files.
 
 ### Click
 
-Click changes focus and rebuilds the local cloud.
+Click commits persistent selection and updates the local layered context.
 
-### Back / breadcrumb
+### Home / breadcrumb
 
-The user should always understand where they are.
+The user should always understand where they are. `Cards + Graph` returns to the overview; breadcrumb shows the persistent path.
 
 Example:
 

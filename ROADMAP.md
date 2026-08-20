@@ -349,60 +349,47 @@ Day 1 navigation commands (`pwd`, `ls`, `cd`) are already learned and represente
 
 Future topics such as system information, archives, and integrity / hashing remain outside the current root until they are deliberately added to scope.
 
-## Command Cloud information architecture decision
+## Cards + Graph information architecture decision
 
-Final direction for the root interaction:
+The previous radial / temporary-focus model is archived as a validated experiment.
 
-- [x] Use descriptive functional areas directly around `LINUX` rather than abstract umbrella domains or a flat command list
-- [x] Keep commands one level below those functional areas
-- [x] Define desktop temporary-focus behavior for functional-area hover
-- [x] Validate `Reading text` temporary-focus prototype
-- [x] Hovered area moves toward the visual center
-- [x] `LINUX` + non-hovered root areas move together in the opposite direction
-- [x] Background root areas fade progressively instead of disappearing abruptly
-- [x] Temporary child commands appear as a directional command tail
-- [x] Temporary relationship lines stay attached to the moving focused area
-- [x] Click commit uses tail fade-out → finish centering → persistent radial render
-- [x] Keep click/tap as the persistent focus transition
-- [x] Preserve first-tap preview / second-tap focus behavior on touch devices
-- [ ] Generalize temporary-focus branches from `Reading text` to all root areas
-- [ ] Add one additional hover-expanded option/variant level where useful
-- [ ] Validate animation readability and performance on desktop
-- [ ] Revalidate mobile behavior after the interaction update
+The active website direction is now **Cards + Graph with layered local knowledge views**.
 
-Current validated desktop prototype:
+Validated:
 
-```text
-hover Reading text
-→ Reading text moves to temporary center
-→ LINUX + other domains drift together away
-→ other domains gradually fade
-→ cat / less / head / tail appear as a command tail
+- [x] Use descriptive functional-area cards on the overview
+- [x] Keep commands one level below functional areas
+- [x] Clicking a card opens a local layered knowledge view
+- [x] Use `Cards + Graph` as the Home control
+- [x] Use breadcrumb for persistent navigation context
+- [x] Place area title and command row together at the top
+- [x] Reserve stable height for first-level `Options & concepts`
+- [x] Hover another command to temporarily preview its child options
+- [x] Restore selected command context after hover ends
+- [x] Clear stale child/deep state when selecting a different top-level command
+- [x] Support deeper paths such as `ls → -l → permissions / owner / group / size / modified / filename`
+- [x] Keep parent option row visible during deep focus
+- [x] Dim sibling options during deep focus
+- [x] Restore a dimmed sibling on hover
+- [x] Clicking a dimmed sibling exits the deep branch
+- [x] Use a full-width square-cornered terminal-style syntax block
+- [ ] Revalidate keyboard behavior after the Cards + Graph redesign
+- [ ] Revalidate mobile/touch behavior after the Cards + Graph redesign
+- [ ] Validate all eight functional areas with the same interaction rules
+- [ ] Polish transition/readability/performance on desktop
 
-click Reading text
-→ tail fades out
-→ Reading text completes centering
-→ old root context fades out
-→ persistent radial Reading text view appears
-```
-
-This interaction is validated for `Reading text` only and must be generalized before the website task is marked complete.
-
-Planned root areas:
+Current model:
 
 ```text
-Linux
-├── Reading text
-├── Text processing
-├── Search
-├── File operations
-├── Permissions
-├── Processes
-├── Networking
-└── Services & logs
+Cards overview
+→ functional area
+→ command layer
+→ options / concepts
+→ optional deeper concept layer
+→ detail / syntax
 ```
 
-Do not populate future command branches before they are introduced in the Learn Path.
+The archived radial prototype should not be generalized unless the roadmap is deliberately changed again.
 
 ## Planned interactive learning layer — post Learn Path / optional v1.5
 
@@ -438,14 +425,14 @@ Do not interrupt Days 5–10 to build this feature. Finish the core Learn Path f
 - [x] Create `style.css`
 - [x] Create `app.js`
 - [x] Load knowledge from `data/map.json`
-- [x] Render Linux-centered command cloud
-- [x] Render contextual command options
-- [x] Hover / tap preview
-- [x] Click / tap focus transitions
-- [x] Breadcrumb / back navigation
+- [x] Render functional-area Cards overview
+- [x] Render layered commands, options, and deeper concepts
+- [x] Desktop hover preview
+- [x] Persistent click selection and layered navigation
+- [x] Home control + breadcrumb navigation
 - [ ] Task-oriented discovery path
 - [ ] Command detail/reference links
-- [x] Mobile layout
+- [ ] Revalidate mobile layout and touch interaction after redesign
 - [ ] Internal links to GitHub/reference pages
 - [ ] Deploy with Nginx
 - [ ] Enable HTTPS

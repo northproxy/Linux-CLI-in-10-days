@@ -12,159 +12,120 @@ The same knowledge should support:
 4. **command reference pages**
 5. **visual and Instagram content**
 
-## Primary interaction model — Command Cloud
+## Primary interaction model — Cards + Graph
 
-The website begins with `LINUX` as the central concept.
+The data model remains a connected knowledge graph.
 
-The first ring should use descriptive functional areas rather than a flat command list.
+The active visual interface is **Cards + Graph**, not a global radial layout.
+
+### Root level
+
+Functional-area cards provide the entry points:
 
 ```text
-                    Search
-
-      Reading text          Processes
-
-File operations      LINUX      Networking
-
-     Text processing      Permissions
-
-             Services & logs
+Reading text
+Text processing
+Search
+File operations
+Permissions
+Processes
+Networking
+Services & logs
 ```
 
 Commands live one level below these areas.
 
-The exact layout can change dynamically.
-
-The purpose is not to show every command at once.
-
-The purpose is to show a useful local context.
-
-
-## Temporary hover-focus model
-
-Desktop hover previews graph structure without immediately committing navigation.
-
-The validated root interaction is a temporary-focus scene:
-
-```text
-normal state
-
-             Reading text
-
-                 LINUX
-
-hover Reading text
-
-                 cat
-                    less
-        Reading text   head
-                       tail
-
-        LINUX + other root areas
-        drift away and fade
-```
-
-Behavior:
-
-```text
-hover functional area
-→ hovered area moves toward the visual center
-→ LINUX and non-hovered root areas move together in the opposite direction
-→ background root areas gradually fade toward transparency
-→ immediate child commands appear as a temporary outward command tail
-→ animated parent-child lines stay attached to the moving hovered area
-```
-
-`LINUX` remains the global starting point in the knowledge model, but during this temporary visual state it is allowed to move with the old root context.
-
-Clicking the temporarily focused area commits navigation using a deliberately simpler transition:
-
-```text
-temporary command tail fades out
-→ hovered area completes centering
-→ old LINUX/root context fades out
-→ persistent focused view is rendered
-→ child commands appear in the normal radial layout
-```
-
-Hover may later continue one level deeper, for example:
-
-```text
-Reading text
-  └── tail   ← hovered
-        ├── -n N
-        └── -f
-```
-
-Limit temporary hover expansion to about two visible levels so the graph remains calm and readable.
-
-On touch devices, preserve the validated first-tap preview / second-tap focus behavior rather than relying on hover. Revalidate touch behavior after the temporary-focus desktop interaction is generalized.
-
-## Focus model
-
-Clicking a node makes it the new center.
+### Local layered context
 
 Example:
 
 ```text
-Linux
-  ↓
+File operations
+├── pwd
+├── ls
+├── cd
+├── mkdir
+├── touch
+├── cp
+├── mv
+└── rm
+```
+
+Selecting `ls` reveals:
+
+```text
 ls
+├── -a
+├── -l
+├── -la
+├── -h
+└── -R
 ```
 
-The cloud then changes to the context of `ls`:
+Selecting `-l` reveals a deeper concept layer:
 
 ```text
-                         -a
-                -l               -h
-
-                         ls
-
-                -la              -R
-                         -t
+ls
+└── -l
+    ├── permissions
+    ├── owner
+    ├── group
+    ├── size
+    ├── modified
+    └── filename
 ```
 
-The previous context should remain reachable through a Back action or breadcrumb.
+### Temporary hover preview
 
-## Hover / tap preview
-
-A node should explain itself before the user commits to a deeper step.
-
-Hover example:
-
-```text
-ls -a
-Show all entries, including hidden files.
-```
-
-The preview should normally include:
-
-- next syntax;
-- short meaning;
-- safety note when relevant.
-
-Keep it short.
-
-Do not turn the tooltip into a manual page.
-
-## Deeper nodes
-
-Some command variants naturally reveal concepts contained in their output.
+Hover can temporarily display another command's immediate children without changing persistent state.
 
 Example:
 
 ```text
-Linux
-→ ls
-→ -l
-→ permissions
-  owner
-  group
-  size
-  modified
-  filename
+mkdir selected
+→ -p
+
+hover cd
+→ /  ~  ..
+
+leave cd
+→ -p
 ```
 
-This allows the graph to connect commands with Linux concepts, not only with options.
+### Persistent state
+
+Click changes persistent selection.
+
+Switching top-level commands clears previous child/deep branch state before rendering the new command.
+
+### Deep focus
+
+When a deeper branch is active:
+
+- keep the parent option row visible;
+- dim sibling options;
+- restore a dimmed sibling on hover;
+- clicking a dimmed sibling exits the deeper branch and returns to the parent-command level.
+
+### Detail / syntax
+
+The selected knowledge node may provide:
+
+- type;
+- title;
+- short meaning;
+- syntax;
+- safety note.
+
+Syntax is rendered in a terminal-style block, but no real shell execution occurs in the browser.
+
+### Navigation
+
+`Cards + Graph` returns to the overview.
+
+Breadcrumb shows persistent context.
+
+The archived radial / temporary-focus interface remains historical design evidence only.
 
 ## Task-oriented entry
 
@@ -275,13 +236,16 @@ Lessons should link to this knowledge instead of recreating large command descri
 
 ## Navigation principles
 
-- The current persistent focus is visually dominant; a hovered root area may temporarily become the dominant local focus before click.
-- Show only a useful local neighborhood.
-- Use font size, distance, and hierarchy to communicate importance.
-- Hover previews the next step.
-- Click changes focus.
-- Back/breadcrumb restores context.
-- Mobile tap must provide an equivalent interaction.
-- Do not duplicate knowledge between Command Cloud and Task Map.
-- Add nodes only when they improve understanding or navigation.
+- Functional-area cards are the visual root.
+- Show only useful local context.
+- Hover previews temporary context without silently committing navigation.
+- Click changes persistent selection.
+- Switching top-level commands clears stale deeper state.
+- Keep the first child region visually stable.
+- A deeper branch may add one additional visible layer.
+- Dim siblings during deep focus rather than removing them.
+- `Cards + Graph` returns to overview.
+- Breadcrumb restores persistent context.
+- Mobile/touch behavior must provide equivalent information and requires separate validation.
+- Do not duplicate knowledge between Cards + Graph and Task Map.
 - Dangerous commands must surface a safety warning before execution examples.

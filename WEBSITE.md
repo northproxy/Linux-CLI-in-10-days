@@ -17,148 +17,142 @@ HTTPS
 
 Do not introduce a frontend framework, backend, database, or build system unless the vanilla implementation becomes genuinely insufficient.
 
-## Main experience — Dynamic Command Cloud
+## Main experience — Cards + Graph
 
-### State 1 — Linux overview
+The active website architecture is **Cards + Graph**.
 
-The initial view places `LINUX` in the center.
+The earlier Linux-centered radial / temporary-focus prototype is archived and is not the current implementation target.
 
-A small set of descriptive functional areas appears around it, for example `Reading text`, `Text processing`, `Search`, `File operations`, `Permissions`, `Processes`, `Networking`, and `Services & logs`. Commands are not shown as a flat root-level list.
+### State 1 — Functional-area overview
 
-```text
-                    Search
-
-      Reading text          Processes
-
-File operations      LINUX      Networking
-
-     Text processing      Permissions
-
-             Services & logs
-```
-
-Do not render the complete Linux command universe at once.
-
-The first view should be understandable and calm.
-
-### State 2 — Command focus
-
-Clicking `ls` makes `ls` the center.
-
-The cloud is rebuilt around `ls`.
-
-```text
-                         -a
-                -l               -h
-
-                         ls
-
-                -la              -R
-```
-
-### State 3 — Deeper context
-
-Clicking a meaningful variant can reveal concepts associated with the command or its output.
-
-Example:
-
-```text
-Linux › ls › -l
-```
-
-with nodes such as:
-
-```text
-permissions
-owner
-group
-size
-modified
-filename
-```
-
-## Interaction rules
-
-### Hover — temporary focus scene
-
-Hovering a functional-area node creates a temporary focus scene.
-
-Validated prototype behavior with `Reading text`:
+The first screen presents functional areas as cards:
 
 ```text
 Reading text
-→ moves toward the visual center
-
-LINUX + non-hovered root areas
-→ move together in the opposite direction
-→ gradually fade toward transparency
-
-cat / less / head / tail
-→ appear as a temporary outward command tail
-→ remain connected to Reading text with moving relationship lines
+Text processing
+Search
+File operations
+Permissions
+Processes
+Networking
+Services & logs
 ```
 
-The temporary scene does not change `currentFocus`.
+The overview should remain calm, readable, and usable without hover.
 
-Hovering a command may later reveal one further level of options/variants. Temporary expansion should normally stop after about two visible levels.
+Clicking a card opens its local knowledge context.
 
-Hover also shows a compact tooltip where appropriate.
+### State 2 — Local command layer
 
 Example:
 
 ```text
+File operations
+
+Commands:
+pwd  ls  cd  mkdir  touch  cp  mv  rm
+```
+
+The area title and command row share the top section.
+
+`Cards + Graph` acts as the Home control.
+
+Breadcrumb provides persistent context:
+
+```text
+Linux › File operations › ls
+```
+
+### State 3 — Options & concepts
+
+Selecting a command reveals its immediate children in a stable-height region.
+
+Example:
+
+```text
+ls
+→ -a  -l  -la  -h  -R
+```
+
+Hovering another command temporarily replaces this preview with that command's children without changing persistent selection.
+
+Example:
+
+```text
+mkdir selected
+→ -p
+
+hover cd
+→ /  ~  ..
+
+leave cd
+→ -p
+```
+
+Selecting a different top-level command clears previous child and deep state.
+
+### State 4 — Deeper context
+
+A meaningful child may open one additional persistent layer.
+
+Example:
+
+```text
+ls
+→ -l
+→ permissions  owner  group  size  modified  filename
+```
+
+During deep focus:
+
+- the parent option row remains visible;
+- sibling options are dimmed;
+- hovering a dimmed sibling restores it temporarily;
+- clicking a dimmed sibling exits the deep branch and returns to the parent-command state.
+
+### Detail card
+
+The selected command/option/concept is explained in a detail card.
+
+Syntax is rendered in a full-width square-cornered terminal-style block:
+
+```text
 ls -a
-Show all entries, including hidden files.
 ```
 
-The tooltip should answer:
+The terminal styling is explanatory only; the browser does not execute shell commands.
 
-- what syntax this node represents;
-- what it does;
-- whether there is an important safety concern.
+### Interaction rules
 
-### Click — commit temporary focus
+#### Hover
 
-Clicking the temporarily focused area commits navigation.
+Hover is a temporary preview.
 
-Validated transition direction:
+It may:
 
-```text
-temporary command tail
-→ fade out
+- update detail text;
+- preview the hovered command's immediate options;
+- restore visibility to a dimmed sibling.
 
-hovered area
-→ finish moving to exact center
+Hover must not silently change persistent selection.
 
-LINUX + previous root context
-→ finish fading out
+#### Click
 
-persistent render
-→ selected area becomes center
-→ child commands appear in the standard radial layout
-```
+Click commits persistent selection.
 
-This is intentionally simpler than morphing the temporary tail directly into the final circle.
+A new top-level command clears previous child/deep state before rendering its own context.
 
-Hover is temporary graph exploration; click makes the selected node the persistent center.
+#### Navigation
 
-### Back
+- `Cards + Graph` → overview
+- breadcrumb → persistent path navigation
+- no separate `Back` button is required in the current desktop design
 
-Provide a clear Back action.
+#### Mobile
 
-### Breadcrumb
+Touch behavior must be revalidated for the Cards + Graph redesign.
 
-Show current context, for example:
-
-```text
-Linux › ls › -l
-```
-
-### Mobile
-
-Touch devices do not have hover. Keep the validated model: first tap previews/temporarily exposes context, second tap changes focus.
-
-The same information must remain available through tap interaction. Do not assume desktop behavior automatically works on mobile.
+Do not assume desktop hover semantics work on touch devices.
 
 ## Secondary experience — Find by task
 
@@ -319,48 +313,37 @@ Deployment comes after the local interaction model is validated.
 
 ## Current prototype status
 
-Validated:
+Validated locally through VS Code Live Server:
 
-- `LINUX` starts as the central node;
-- a small command set is rendered around it;
-- clicking `ls` makes `ls` the new center;
-- `ls` options are rendered from `data/map.json`;
-- clicking `-l` can continue to a deeper `ls -l` context;
-- `ls -l` reveals output concepts such as permissions, owner, group, size, modified time, and filename;
-- nodes are positioned automatically in a radial layout based on node count;
-- desktop hover shows a real floating tooltip with syntax and short meaning;
-- keyboard focus can expose the same tooltip;
-- touch devices use first tap for preview and second tap for focus;
-- Back and breadcrumb navigation preserve context;
-- the current knowledge model is loaded with `fetch()` from `data/map.json`;
-- local development is tested through VS Code Live Server.
+- functional-area Cards overview;
+- animated card → local-context transition;
+- JSON-driven knowledge loaded from `../data/map.json`;
+- local command layer;
+- stable first-level `Options & concepts` area;
+- temporary hover preview of another command's children;
+- persistent command selection;
+- stale child/deep state cleanup when switching commands;
+- deeper branch rendering;
+- dimmed sibling behavior during deep focus;
+- sibling hover restoration;
+- sibling click exits deep focus;
+- Home behavior through `Cards + Graph`;
+- larger breadcrumb navigation;
+- full-width square-cornered terminal-style syntax block.
 
-Validated example path:
+Validated example:
 
 ```text
-Linux
+File operations
 → ls
 → -l
 → permissions / owner / group / size / modified / filename
 ```
 
-### Post-Learn-Path interaction update
+Next validation work:
 
-A new desktop temporary-focus interaction has been validated with the `Reading text` root area:
-
-```text
-hover Reading text
-→ Reading text moves toward center
-→ LINUX + other root areas move together away from it
-→ background areas fade gradually
-→ cat / less / head / tail appear as a temporary command tail
-
-click Reading text
-→ temporary tail fades out
-→ Reading text completes centering
-→ old root context fades out
-→ persistent Reading text view renders
-→ cat / less / head / tail appear in the normal radial layout
-```
-
-This prototype currently validates the interaction direction with one root area. The next implementation step is to generalize the same model to the remaining functional areas, then revalidate desktop readability/performance and mobile behavior.
+- all eight functional areas;
+- keyboard behavior;
+- mobile/touch behavior;
+- desktop spacing, animation, and performance;
+- task-oriented discovery and reference links.

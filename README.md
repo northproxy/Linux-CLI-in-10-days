@@ -1,6 +1,6 @@
 # Linux CLI in 10 Days
 
-A practical Linux CLI learning project built around an interactive **Command Cloud**.
+A practical Linux CLI learning and portfolio project built around an interactive **Cards + Graph** knowledge interface.
 
 One knowledge base. Three outputs:
 
@@ -13,58 +13,72 @@ One knowledge base. Three outputs:
           Course      Command Cloud   Visual Cards
 ```
 
-## Core idea
+## Status
 
-The website is not a traditional command list.
+**Active development.**
 
-It starts with `LINUX` in the center and descriptive functional areas around it:
+The 10-day Linux CLI learning path and final log-investigation exercise are complete.
+
+The current website direction is a validated **Cards + Graph** interface:
 
 ```text
-                    Search
-
-      Reading text          Processes
-
-File operations      LINUX      Networking
-
-     Text processing      Permissions
-
-             Services & logs
+functional-area cards
+→ local command layer
+→ options / concepts
+→ deeper related concepts
+→ syntax / explanation
 ```
 
-`LINUX` is the global starting point. On desktop, hovering a functional area creates a temporary focus transition: the hovered area moves toward the center, the original Linux root context drifts away and fades, and the area's child commands appear as a temporary command tail. Clicking commits the focus and rebuilds a clean radial view around the selected area or command.
+The earlier radial / temporary-focus interface was a useful prototype and is now archived outside the active project.
+
+## Core idea
+
+The website is not a traditional command list and no longer depends on a radial graph layout.
+
+The overview uses functional-area cards such as:
+
+```text
+Reading text
+Text processing
+Search
+File operations
+Permissions
+Processes
+Networking
+Services & logs
+```
+
+Clicking a card opens a local layered knowledge view.
 
 Example:
 
 ```text
-Linux root
-  ↓ hover Reading text
-
-Reading text → temporary center
-cat / less / head / tail → temporary command tail
-LINUX + other root areas → drift away + fade
-
-  ↓ click Reading text
-
-Reading text → persistent center
-cat / less / head / tail → radial command layout
+File operations
+→ ls
+→ -l
+→ permissions / owner / group / size / modified / filename
 ```
 
-Hovering over `-a` can show:
+The current interaction rules include:
 
-```text
-ls -a
-Show all entries, including hidden files.
-```
+- `Cards + Graph` returns to the overview;
+- breadcrumb shows persistent context;
+- area title and commands share the top row;
+- the first `Options & concepts` area keeps a stable height;
+- hovering another command temporarily previews its options without changing persistent selection;
+- clicking another top-level command clears previous child/deep state;
+- deeper paths keep the parent option row visible and dim sibling options;
+- hovering a dimmed sibling restores it temporarily;
+- clicking a dimmed sibling exits the deeper branch and returns to the parent-command level;
+- syntax is shown in a full-width, square-cornered terminal-style block.
 
-Clicking deeper can reveal output concepts, syntax, or related knowledge.
-
-The interface behaves like an explorable Linux CLI knowledge graph rather than a static menu.
+The interface remains an explorable knowledge graph conceptually, but the visual organization is **cards + layered local context**, not a global moving graph.
 
 ## Two ways to find knowledge
 
-### Command Cloud
+### Explore
 
-Use when you want to explore a functional area or recognize a command and want to see what it can do.
+Use the Cards + Graph interface when you want to explore a functional area, command, option, or related concept.
 
 ```text
 Linux → ls → -l → permissions / owner / size / date
@@ -89,7 +103,7 @@ Both paths should lead to the same underlying knowledge.
 After the core Learn Path is stable, the same knowledge graph can drive a contextual learning flow:
 
 ```text
-Command Cloud
+Cards + Graph
 → Learn by example
 → Practice
 → Challenge

@@ -8,7 +8,7 @@ It is not a separate curriculum or knowledge base.
 
 ## Strong content source
 
-The Command Cloud creates reusable visual states that can become social content.
+The Cards + Graph interface creates reusable layered visual states that can become social content.
 
 Examples:
 
@@ -30,7 +30,7 @@ A static Instagram slide can capture one meaningful state of the interactive web
 
 Good candidates:
 
-- one Command Cloud focus state;
+- one Cards + Graph knowledge state;
 - one command and its most useful variants;
 - one confusing concept explained visually;
 - one pipeline;
@@ -51,9 +51,9 @@ You know `ls`.
 But what changes when you add `-a` or `-l`?
 ```
 
-### Slide 2 — Command Cloud
+### Slide 2 — Cards + Graph state
 
-Show `ls` in the center with useful options around it.
+Show the relevant area, command row, and useful option layer.
 
 ### Slide 3 — Meaning
 

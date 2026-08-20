@@ -5,34 +5,20 @@
 Build a compact Linux CLI learning and portfolio project with one knowledge base and three outputs:
 
 1. **GitHub repository** — structured course and command reference.
-2. **Static website** — interactive dynamic Command Cloud.
+2. **Static website** — interactive Cards + Graph knowledge interface.
 3. **Instagram** — concise visual learning content derived from the same knowledge.
 
 The project should remain small, understandable, practical, and maintainable.
 
-## 2. Core concept — Dynamic Command Cloud
+## 2. Core concept — Cards + Graph
 
-The primary website interaction is a dynamic contextual knowledge cloud.
+The active website architecture is a **Cards + Graph** interface.
 
-Initial state:
+The earlier radial / temporary-focus Command Cloud remains a validated design experiment, but it is archived and is no longer the required final architecture.
 
-```text
-                    Search
+### Overview state
 
-      Reading text          Processes
-
-File operations      LINUX      Networking
-
-     Text processing      Permissions
-
-             Services & logs
-```
-
-`LINUX` is the central node.
-
-Human-readable functional areas appear around `LINUX` rather than a flat list of commands.
-
-Planned top-level functional areas:
+The root view uses descriptive functional-area cards:
 
 ```text
 Reading text
@@ -45,88 +31,52 @@ Networking
 Services & logs
 ```
 
-Commands belong under these descriptive areas. A node is not just a link. It is an interactive knowledge point.
+The overview should feel calm and immediately understandable.
 
-### Hover / tap preview and temporary focus
+### Local layered view
 
-On desktop, hovering a functional-area node creates a temporary focus scene rather than immediately changing navigation state.
-
-Validated interaction direction:
-
-```text
-normal root state
-LINUX + functional areas
-
-hover Reading text
-→ Reading text moves toward the visual center
-→ LINUX and the other root areas drift together in the opposite direction
-→ background areas gradually fade toward transparency
-→ Reading text commands appear as a temporary outward "tail"
-→ temporary parent-child lines move with the focused area
-```
-
-`LINUX` remains the global starting point, but it is not visually fixed during this temporary-focus animation. It stays readable as background context while the hovered functional area becomes the temporary local focus.
-
-Hovering a command may later reveal one further level of useful options or variants. Temporary expansion should normally stop after about two visible levels to avoid clutter.
-
-Hover/tap also shows:
-
-- the resulting command or syntax;
-- a short explanation of what it does.
+Clicking a functional-area card opens a local knowledge view instead of expanding a global graph.
 
 Example:
 
 ```text
-ls -a
-Show all entries, including hidden files.
+File operations
+→ pwd / ls / cd / mkdir / touch / cp / mv / rm
 ```
 
-### Click / tap focus
-
-Clicking the temporarily focused area commits the navigation:
+Selecting a command reveals its immediate options or concepts:
 
 ```text
-temporary hover focus
-→ temporary command tail fades out
-→ hovered area completes its move to the center
-→ LINUX and the old root context fade out
-→ persistent focused view is rendered
-→ child commands appear in a clean radial layout
-```
-
-Hover expansion is temporary; click focus is persistent.
-
-Example:
-
-```text
-Linux
-  ↓
 ls
-  ↓
--a  -l  -la  -h  -R
+→ -a / -l / -la / -h / -R
 ```
 
-The selected command becomes the center and the cloud is rebuilt around its context.
-
-### Deeper exploration
-
-A command variant may lead to concepts contained in its output.
-
-Example:
+A meaningful option may reveal one deeper layer:
 
 ```text
-Linux
-→ ls
+ls
 → -l
-→ permissions
-  owner
-  group
-  size
-  modified
-  filename
+→ permissions / owner / group / size / modified / filename
 ```
 
-The interface should feel like exploring a knowledge graph, not navigating static pages.
+### Validated interaction behavior
+
+Current validated behavior:
+
+- `Cards + Graph` is the Home control;
+- breadcrumb shows the persistent path;
+- area title and commands share the top row;
+- first-level `Options & concepts` occupies a stable-height region;
+- hovering another command temporarily previews that command's child options without changing persistent selection;
+- leaving hover restores the selected command's child options;
+- clicking a new top-level command clears stale child/deep state;
+- when a deeper branch is active, sibling options remain visible but are dimmed;
+- hovering a dimmed sibling restores its visibility temporarily;
+- clicking a dimmed sibling exits the deeper branch and returns to the parent-command state;
+- syntax and examples use a full-width, square-cornered terminal-style block;
+- the interface does not pretend to execute shell commands.
+
+The knowledge remains graph-like in the data model, but visual geometry is layered rather than globally radial.
 
 ## 3. Secondary navigation — Task-oriented paths
 
@@ -254,7 +204,7 @@ No React, Vue, Node.js application layer, backend, database, API, or build syste
 ### Visuals
 
 - technical diagrams;
-- radial command-cloud views;
+- cards + layered knowledge views;
 - command anatomy;
 - flows;
 - trees;
@@ -404,10 +354,10 @@ v1 is complete when:
 - all 10 lessons are finished;
 - the final log-analysis exercise works;
 - core command reference pages exist;
-- the Command Cloud starts from Linux and supports contextual exploration;
-- hover/tap previews work;
-- click/tap focus transitions work;
-- back/breadcrumb navigation works;
+- the Cards + Graph overview supports contextual exploration from functional areas;
+- hover/tap previews provide equivalent contextual information;
+- click/tap persistent selection works;
+- Home/breadcrumb navigation works;
 - the task-oriented path can reach relevant commands;
 - the knowledge data is loaded from JSON;
 - the website is usable on mobile;

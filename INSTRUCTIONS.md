@@ -108,111 +108,63 @@ Command references
 
 Use `LESSON_TEMPLATE.md`.
 
-## 6. Dynamic Command Cloud principle
+## 6. Cards + Graph principle
 
-The primary website interaction is a contextual knowledge cloud.
+The active website architecture is **Cards + Graph with layered local knowledge views**.
 
-`LINUX` remains the global starting point. The first visible ring should use descriptive, human-readable functional areas rather than a flat list of commands or broad abstract labels.
+The old radial / temporary-focus prototype is archived. Treat it as a validated experiment, not as the current architecture.
 
-Current planned root direction:
+### Overview
 
-```text
-                    Search
-
-      Reading text          Processes
-
-File operations      LINUX      Networking
-
-     Text processing      Permissions
-
-             Services & logs
-```
-
-Commands live below these areas. Do not populate future branches before the corresponding Learn Path material is introduced.
-
-### Hover / tap preview and temporary focus
-
-On desktop, hovering a functional-area node uses a temporary-focus animation.
-
-Validated behavior:
+Use descriptive functional-area cards:
 
 ```text
-hover functional area
-→ area moves toward the visual center
-→ LINUX + the other root areas move together in the opposite direction
-→ background root areas gradually fade toward transparency
-→ the hovered area's child commands appear as a temporary command tail
-→ thin relationship lines remain attached to the moving hovered area
+Reading text
+Text processing
+Search
+File operations
+Permissions
+Processes
+Networking
+Services & logs
 ```
 
-`LINUX` is the global starting point, but during temporary focus it may move with the old root context instead of remaining visually fixed.
+### Local context
 
-Hovering a command may later reveal one additional level of useful options or variants. Normally limit temporary hover expansion to about two visible levels so the graph remains readable.
-
-Hover/tap should also preview the next syntax and a short explanation.
+Clicking a card opens a local layered view.
 
 Example:
 
 ```text
-ls -a
-Show all entries, including hidden files.
+File operations
+→ ls
+→ -l
+→ permissions / owner / group / size / modified / filename
 ```
 
-### Click / tap focus
+### Interaction rules
 
-Click commits the temporary focus rather than trying to morph the temporary command tail directly into the final layout.
-
-Preferred sequence:
-
-```text
-click temporarily focused area
-→ temporary child commands fade out
-→ focused area completes its move to the center
-→ LINUX / previous root context fade out
-→ persistent focused view is rendered
-→ child commands appear again in the normal radial layout
-```
-
-Hover focus is temporary; click focus is persistent.
-
-Example:
-
-```text
-Linux → Reading text → tail → -n N / -f
-```
-
-### Deeper context
-
-A meaningful variant may reveal related output concepts.
-
-Example:
-
-```text
-ls -l
-→ permissions
-→ owner
-→ group
-→ size
-→ modified
-```
-
-### Navigation
-
-Provide Back and/or breadcrumb context.
-
-Example:
-
-```text
-Linux › Reading text › tail
-```
+- `Cards + Graph` is Home.
+- Breadcrumb shows persistent context.
+- Area title and command row share the top section.
+- First-level `Options & concepts` keeps stable height.
+- Hovering another command temporarily previews its child options without changing selection.
+- Leaving hover restores persistent context.
+- Clicking a different top-level command clears stale child/deep state.
+- A deeper branch keeps its parent option row visible.
+- Sibling options are dimmed during deep focus.
+- Hover restores a dimmed sibling temporarily.
+- Clicking a dimmed sibling exits the deep branch.
+- Syntax uses a full-width square-cornered terminal-style block.
+- The browser does not execute real shell commands.
 
 ### Mobile
 
-Touch devices do not have hover. Preserve the validated first-tap preview / second-tap focus behavior and keep equivalent information available through tap interaction.
+Revalidate the Cards + Graph interaction separately on touch devices.
 
-Do not display the entire graph at once. Show only a useful local context.
+Do not mechanically reuse the old first-tap/second-tap radial behavior unless it proves useful again.
 
-Do not finalize or populate a large data model before the relevant learning material is introduced.
+Show only useful local context.
 
 ## 7. Task-oriented discovery principle
 
@@ -324,7 +276,7 @@ The header must contain:
  * Script: app.js
  *
  * Purpose:
- * Renders and controls the interactive Linux CLI Command Cloud.
+ * Renders and controls the interactive Linux CLI Cards + Graph interface.
  *
  * Project:
  * Linux CLI in 10 Days — learning and portfolio project.
@@ -521,19 +473,21 @@ Use:
 We are continuing the Linux CLI in 10 Days project.
 
 Read PROJECT.md, ROADMAP.md, INSTRUCTIONS.md, KNOWLEDGE_MAP.md,
-WEBSITE.md, and the relevant project files.
+WEBSITE.md, VISUAL_GUIDE.md, README.md, and LEARNING_LOG.md.
 
 This is a learning and portfolio project.
 Work in medium-sized blocks.
 Do not document every small action.
 Do not build the whole project in advance.
 
-The website concept is a dynamic Linux CLI Command Cloud:
-`LINUX` is surrounded by descriptive functional areas; desktop hover creates a
-temporary local focus where the hovered area moves toward center, the previous
-root context drifts/fades, and child commands appear as a temporary tail.
-Click/tap commits the node as the persistent focus and rebuilds the local cloud
-around that command or concept.
+The active website architecture is Cards + Graph:
+functional-area cards open a layered local knowledge view.
+Commands reveal options/concepts; meaningful options may reveal one deeper layer.
+Hover previews temporary context; click commits persistent selection.
+The first Options & concepts region has stable height.
+Deep focus keeps sibling options visible but dimmed.
+Cards + Graph is Home; breadcrumb shows persistent context.
+The old radial / temporary-focus prototype is archived and is not the active architecture.
 
 Every script must include the required project header from INSTRUCTIONS.md.
 
