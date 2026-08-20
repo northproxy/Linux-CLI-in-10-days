@@ -1,35 +1,81 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Linux CLI — Cards + Graph</title>
   <link rel="stylesheet" href="style.css">
-  <title>Linux CLI in 10 Days</title>
 </head>
-
 <body>
-  <main>
-    <h1>Linux CLI Command Cloud</h1>
+  <main class="app-shell">
 
-    <section class="command-cloud">
-      <nav class="cloud-navigation" aria-label="Command Cloud navigation">
-        <button id="back-button" class="back-button" type="button" hidden>
-          ← Back
-        </button>
+    <header class="topbar">
+      <button id="brand-home" class="brand-home" type="button" aria-label="Return to all areas">
+        Cards + Graph
+      </button>
+      <p class="eyebrow">Linux CLI in 10 Days</p>
+    </header>
 
-        <div id="breadcrumb" class="breadcrumb">
-          Linux
-        </div>
-      </nav>
+    <nav id="breadcrumb" class="breadcrumb" aria-label="Breadcrumb"></nav>
 
-      <div id="cloud-nodes" class="cloud-nodes">
-        <!-- JavaScript renders the current Command Cloud here. -->
+    <section id="overview-view" class="view">
+      <div class="intro">
+        <p class="kicker">Explore by purpose</p>
+        <h2>What do you want to work with?</h2>
+        <p>Choose a functional area. Each card opens into a local knowledge map.</p>
       </div>
 
-      <p id="command-result">
-        Select a command to explore.
-      </p>
+      <div class="workspace-shell">
+        <div id="area-grid" class="area-grid"></div>
+        <div id="transition-layer" class="transition-layer" aria-hidden="true"></div>
+      </div>
     </section>
+
+    <section id="graph-view" class="view" hidden>
+      <section class="graph-panel layered-panel" aria-label="Local knowledge map">
+
+        <div class="knowledge-header">
+          <div class="area-heading">
+            <h2 id="context-title"></h2>
+          </div>
+
+          <div class="command-strip-wrap">
+            <p class="layer-label">Commands</p>
+            <div id="graph-nodes" class="command-layer"></div>
+          </div>
+        </div>
+
+        <div id="graph-stage" class="layered-stage">
+          <div id="child-layer-wrap" class="child-layer-wrap" hidden>
+            <p class="layer-label">Options & concepts</p>
+            <div id="child-layer" class="child-layer"></div>
+          </div>
+
+          <div id="deep-layer-wrap" class="deep-layer-wrap" hidden>
+            <p class="layer-label">Options & concepts</p>
+            <div id="deep-layer" class="deep-layer"></div>
+          </div>
+        </div>
+
+        <aside id="detail-panel" class="detail-panel layered-detail">
+          <div class="detail-copy">
+            <p id="detail-type" class="detail-type">Details</p>
+            <h3 id="detail-title">Choose a node</h3>
+            <p id="detail-description"></p>
+          </div>
+
+          <div class="detail-side">
+            <code id="detail-syntax" class="detail-syntax" hidden></code>
+            <div id="detail-safety" class="safety" hidden></div>
+          </div>
+
+          <p id="detail-hint" class="detail-hint">
+            Hover for a preview. Click a command to open its next layer.
+          </p>
+        </aside>
+      </section>
+    </section>
+
   </main>
 
   <script src="app.js"></script>

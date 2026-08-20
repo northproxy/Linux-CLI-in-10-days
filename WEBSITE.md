@@ -23,20 +23,18 @@ Do not introduce a frontend framework, backend, database, or build system unless
 
 The initial view places `LINUX` in the center.
 
-A small set of important commands appears around it.
+A small set of descriptive functional areas appears around it, for example `Reading text`, `Text processing`, `Search`, `File operations`, `Permissions`, `Processes`, `Networking`, and `Services & logs`. Commands are not shown as a flat root-level list.
 
 ```text
-                         grep
-              find                  ps
+                    Search
 
-        cd                                 curl
+      Reading text          Processes
 
-                        LINUX
+File operations      LINUX      Networking
 
-        pwd                                ss
+     Text processing      Permissions
 
-              ls                    chmod
-                       cat
+             Services & logs
 ```
 
 Do not render the complete Linux command universe at once.
@@ -81,9 +79,30 @@ filename
 
 ## Interaction rules
 
-### Hover
+### Hover — temporary focus scene
 
-Hovering over a node shows a compact tooltip.
+Hovering a functional-area node creates a temporary focus scene.
+
+Validated prototype behavior with `Reading text`:
+
+```text
+Reading text
+→ moves toward the visual center
+
+LINUX + non-hovered root areas
+→ move together in the opposite direction
+→ gradually fade toward transparency
+
+cat / less / head / tail
+→ appear as a temporary outward command tail
+→ remain connected to Reading text with moving relationship lines
+```
+
+The temporary scene does not change `currentFocus`.
+
+Hovering a command may later reveal one further level of options/variants. Temporary expansion should normally stop after about two visible levels.
+
+Hover also shows a compact tooltip where appropriate.
 
 Example:
 
@@ -98,9 +117,30 @@ The tooltip should answer:
 - what it does;
 - whether there is an important safety concern.
 
-### Click
+### Click — commit temporary focus
 
-Clicking a node changes the current focus and rerenders the local context.
+Clicking the temporarily focused area commits navigation.
+
+Validated transition direction:
+
+```text
+temporary command tail
+→ fade out
+
+hovered area
+→ finish moving to exact center
+
+LINUX + previous root context
+→ finish fading out
+
+persistent render
+→ selected area becomes center
+→ child commands appear in the standard radial layout
+```
+
+This is intentionally simpler than morphing the temporary tail directly into the final circle.
+
+Hover is temporary graph exploration; click makes the selected node the persistent center.
 
 ### Back
 
@@ -116,11 +156,9 @@ Linux › ls › -l
 
 ### Mobile
 
-Touch devices do not have hover.
+Touch devices do not have hover. Keep the validated model: first tap previews/temporarily exposes context, second tap changes focus.
 
-The same information must remain available through tap interaction.
-
-Do not assume desktop behavior automatically works on mobile.
+The same information must remain available through tap interaction. Do not assume desktop behavior automatically works on mobile.
 
 ## Secondary experience — Find by task
 
@@ -137,6 +175,75 @@ Filesystem
 ```
 
 This path should point to the same underlying knowledge as the Command Cloud.
+
+## Planned contextual learning panel
+
+After the core Learn Path and Command Cloud are stable, the website may add an interactive learning panel linked to the current graph focus.
+
+Intended flow:
+
+```text
+Command Cloud
+→ Learn by example
+→ Practice
+→ Challenge
+```
+
+### Learn by example
+
+When the current focus is a command such as `tail`, the panel can show short representative examples from the same knowledge data.
+
+```text
+tail app.log
+→ show the last lines
+
+tail -n 20 app.log
+→ show the last 20 lines
+
+tail -f app.log
+→ follow new lines
+```
+
+Changing the Command Cloud focus should update this panel contextually rather than opening an unrelated lesson page.
+
+### Practice mode
+
+Give the learner a partially guided task, for example completing an option or argument.
+
+### Challenge mode
+
+Present a concrete task and let the learner enter a complete command. JavaScript can compare the normalized input with a small set of accepted answers and then show representative output or a short hint.
+
+Example:
+
+```text
+Task: Find ERROR lines in app.log and show line numbers.
+
+Accepted answer:
+grep -n ERROR app.log
+```
+
+### Safety and technical boundary
+
+The first implementation must **not execute real shell commands in the browser**.
+
+Use a static simulation:
+
+```text
+task
++ accepted answers
++ expected output
++ hints
+→ JSON
+→ vanilla JavaScript
+→ rendered feedback
+```
+
+This keeps the site inside the existing static v1 technology model and avoids introducing a backend, container execution service, or remote shell.
+
+The first prototype should use already learned commands such as `grep`, `find`, and `tail`, then be expanded only if the interaction proves useful.
+
+This learning panel is a planned extension and is not currently required for v1 completion.
 
 ## Data
 
@@ -237,6 +344,23 @@ Linux
 → permissions / owner / group / size / modified / filename
 ```
 
-The prototype is now sufficiently validated to continue the Learn Path without expanding the full Linux command universe in advance.
+### Post-Learn-Path interaction update
 
-Next website work should follow learning needs from Day 2 rather than adding unrelated features.
+A new desktop temporary-focus interaction has been validated with the `Reading text` root area:
+
+```text
+hover Reading text
+→ Reading text moves toward center
+→ LINUX + other root areas move together away from it
+→ background areas fade gradually
+→ cat / less / head / tail appear as a temporary command tail
+
+click Reading text
+→ temporary tail fades out
+→ Reading text completes centering
+→ old root context fades out
+→ persistent Reading text view renders
+→ cat / less / head / tail appear in the normal radial layout
+```
+
+This prototype currently validates the interaction direction with one root area. The next implementation step is to generalize the same model to the remaining functional areas, then revalidate desktop readability/performance and mobile behavior.

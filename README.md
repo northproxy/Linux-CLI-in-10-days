@@ -17,39 +17,36 @@ One knowledge base. Three outputs:
 
 The website is not a traditional command list.
 
-It starts with a dynamic field of Linux CLI concepts:
+It starts with `LINUX` in the center and descriptive functional areas around it:
 
 ```text
-                         grep
-              find                  ps
+                    Search
 
-        cd                                 curl
+      Reading text          Processes
 
-                        LINUX
+File operations      LINUX      Networking
 
-        pwd                                ss
+     Text processing      Permissions
 
-              ls                    chmod
-                       cat
+             Services & logs
 ```
 
-The current focus is always the center of the cloud.
-
-Hovering over a node shows a short preview of what it does.
-
-Clicking a node makes it the new focus and reveals the next layer.
+`LINUX` is the global starting point. On desktop, hovering a functional area creates a temporary focus transition: the hovered area moves toward the center, the original Linux root context drifts away and fades, and the area's child commands appear as a temporary command tail. Clicking commits the focus and rebuilds a clean radial view around the selected area or command.
 
 Example:
 
 ```text
-Linux
-  ↓ click ls
-ls
-├── -a
-├── -l
-├── -la
-├── -h
-└── -R
+Linux root
+  ↓ hover Reading text
+
+Reading text → temporary center
+cat / less / head / tail → temporary command tail
+LINUX + other root areas → drift away + fade
+
+  ↓ click Reading text
+
+Reading text → persistent center
+cat / less / head / tail → radial command layout
 ```
 
 Hovering over `-a` can show:
@@ -67,7 +64,7 @@ The interface behaves like an explorable Linux CLI knowledge graph rather than a
 
 ### Command Cloud
 
-Use when you know or recognize a command and want to explore what it can do.
+Use when you want to explore a functional area or recognize a command and want to see what it can do.
 
 ```text
 Linux → ls → -l → permissions / owner / size / date
@@ -86,6 +83,19 @@ Filesystem
 ```
 
 Both paths should lead to the same underlying knowledge.
+
+## Planned interactive learning layer
+
+After the core Learn Path is stable, the same knowledge graph can drive a contextual learning flow:
+
+```text
+Command Cloud
+→ Learn by example
+→ Practice
+→ Challenge
+```
+
+The first prototype should remain a safe static simulation in vanilla JavaScript and JSON rather than executing real shell commands in the browser.
 
 ## Learn
 

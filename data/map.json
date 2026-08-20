@@ -1,803 +1,892 @@
 {
-  "cloud": {
-    "linux": {
-      "center": "LINUX",
-      "type": "root",
-      "nodes": [
-        {
-          "id": "filesystem",
-          "label": "Filesystem",
-          "type": "domain",
-          "description": "Navigate and manage files and directories.",
-          "target": "filesystem"
-        },
-        {
-          "id": "text",
-          "label": "Text",
-          "type": "domain",
-          "description": "Read and inspect text file contents.",
-          "target": "text"
-        },
-        {
-          "id": "search",
-          "label": "Search",
-          "type": "domain",
-          "description": "Search file contents and locate filesystem objects.",
-          "target": "search"
-        }
+  "meta": {
+    "name": "Linux CLI in 10 Days — Cards + Graph prototype",
+    "sourceOfTruth": "Prototype subset derived from the current project knowledge map.",
+    "note": "COMMAND_TREE.md is a derived overview, not a second knowledge source."
+  },
+  "areas": [
+    {
+      "id": "filesystem",
+      "label": "File operations",
+      "description": "Navigate, inspect, create, copy, move, rename, and remove filesystem objects.",
+      "commands": [
+        "pwd",
+        "ls",
+        "cd",
+        "mkdir",
+        "touch",
+        "cp",
+        "mv",
+        "rm"
       ]
+    },
+    {
+      "id": "reading",
+      "label": "Reading text",
+      "description": "Read, browse, and inspect text files.",
+      "commands": [
+        "cat",
+        "less",
+        "head",
+        "tail"
+      ]
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "description": "Search inside text and locate filesystem objects.",
+      "commands": [
+        "grep",
+        "find"
+      ]
+    },
+    {
+      "id": "text-processing",
+      "label": "Text processing",
+      "description": "Connect output, redirect it, count, order, group, and extract text fields.",
+      "commands": [
+        "pipe",
+        "redirect-overwrite",
+        "redirect-append",
+        "wc",
+        "sort",
+        "uniq",
+        "cut"
+      ]
+    },
+    {
+      "id": "permissions",
+      "label": "Permissions",
+      "description": "Inspect and change permissions, ownership, and elevated access.",
+      "commands": [
+        "ls-l",
+        "chmod",
+        "chown",
+        "sudo"
+      ]
+    },
+    {
+      "id": "processes",
+      "label": "Processes",
+      "description": "Inspect, monitor, and safely stop running processes.",
+      "commands": [
+        "ps",
+        "top",
+        "kill"
+      ]
+    },
+    {
+      "id": "networking",
+      "label": "Networking",
+      "description": "Inspect interfaces, test reachability, query web services, and inspect sockets.",
+      "commands": [
+        "ip",
+        "ping",
+        "curl",
+        "ss"
+      ]
+    },
+    {
+      "id": "services",
+      "label": "Services & logs",
+      "description": "Inspect systemd services and investigate journal events.",
+      "commands": [
+        "systemctl",
+        "journalctl"
+      ]
+    }
+  ],
+  "nodes": {
+    "pwd": {
+      "label": "pwd",
+      "type": "command",
+      "description": "Print the current working directory.",
+      "syntax": "pwd",
+      "children": []
+    },
+    "cd": {
+      "label": "cd",
+      "type": "command",
+      "description": "Change the current working directory.",
+      "syntax": "cd PATH",
+      "children": [
+        "cd-root",
+        "cd-home",
+        "cd-parent"
+      ]
+    },
+    "cd-root": {
+      "label": "/",
+      "type": "variant",
+      "description": "Go to the filesystem root.",
+      "syntax": "cd /",
+      "children": []
+    },
+    "cd-home": {
+      "label": "~",
+      "type": "variant",
+      "description": "Go to the current user's home directory.",
+      "syntax": "cd ~",
+      "children": []
+    },
+    "cd-parent": {
+      "label": "..",
+      "type": "variant",
+      "description": "Move to the parent directory.",
+      "syntax": "cd ..",
+      "children": []
     },
     "ls": {
-      "center": "ls",
+      "label": "ls",
       "type": "command",
-      "nodes": [
-        {
-          "id": "ls-a",
-          "label": "-a",
-          "type": "option",
-          "syntax": "ls -a",
-          "description": "Show all entries, including hidden files."
-        },
-        {
-          "id": "ls-l",
-          "label": "-l",
-          "type": "option",
-          "syntax": "ls -l",
-          "description": "Show a detailed long-format listing.",
-          "target": "ls-l"
-        },
-        {
-          "id": "ls-la",
-          "label": "-la",
-          "type": "variant",
-          "syntax": "ls -la",
-          "description": "Show a detailed listing including hidden files."
-        },
-        {
-          "id": "ls-h",
-          "label": "-h",
-          "type": "option",
-          "syntax": "ls -lh",
-          "description": "Show file sizes in human-readable form."
-        },
-        {
-          "id": "ls-R",
-          "label": "-R",
-          "type": "option",
-          "syntax": "ls -R",
-          "description": "List directories recursively."
-        }
+      "description": "List directory contents.",
+      "syntax": "ls",
+      "children": [
+        "ls-a",
+        "ls-l",
+        "ls-la",
+        "ls-h",
+        "ls-R"
       ]
+    },
+    "ls-a": {
+      "label": "-a",
+      "type": "option",
+      "description": "Show all entries, including hidden files.",
+      "syntax": "ls -a",
+      "children": []
     },
     "ls-l": {
-      "center": "ls -l",
-      "type": "variant",
-      "nodes": [
-        {
-          "id": "permissions",
-          "label": "permissions",
-          "type": "output-concept",
-          "description": "Shows the file type and read, write, and execute permission bits."
-        },
-        {
-          "id": "owner",
-          "label": "owner",
-          "type": "output-concept",
-          "description": "Shows the user that owns the file or directory."
-        },
-        {
-          "id": "group",
-          "label": "group",
-          "type": "output-concept",
-          "description": "Shows the group associated with the file or directory."
-        },
-        {
-          "id": "size",
-          "label": "size",
-          "type": "output-concept",
-          "description": "Shows the file size in bytes unless another display option changes it."
-        },
-        {
-          "id": "modified",
-          "label": "modified",
-          "type": "output-concept",
-          "description": "Shows the last modification time."
-        },
-        {
-          "id": "filename",
-          "label": "filename",
-          "type": "output-concept",
-          "description": "Shows the file or directory name."
-        }
+      "label": "-l",
+      "type": "option",
+      "description": "Show a detailed long-format listing.",
+      "syntax": "ls -l",
+      "children": [
+        "permissions-concept",
+        "owner",
+        "group",
+        "size",
+        "modified",
+        "filename"
       ]
+    },
+    "ls-la": {
+      "label": "-la",
+      "type": "variant",
+      "description": "Detailed listing including hidden files.",
+      "syntax": "ls -la",
+      "children": []
+    },
+    "ls-h": {
+      "label": "-h",
+      "type": "option",
+      "description": "Show file sizes in human-readable form.",
+      "syntax": "ls -lh",
+      "children": []
+    },
+    "ls-R": {
+      "label": "-R",
+      "type": "option",
+      "description": "List directories recursively.",
+      "syntax": "ls -R",
+      "children": []
+    },
+    "permissions-concept": {
+      "label": "permissions",
+      "type": "output-concept",
+      "description": "File type plus read/write/execute permission bits.",
+      "children": []
+    },
+    "owner": {
+      "label": "owner",
+      "type": "output-concept",
+      "description": "User that owns the file or directory.",
+      "children": []
+    },
+    "group": {
+      "label": "group",
+      "type": "output-concept",
+      "description": "Group associated with the file or directory.",
+      "children": []
+    },
+    "size": {
+      "label": "size",
+      "type": "output-concept",
+      "description": "File size shown in the listing.",
+      "children": []
+    },
+    "modified": {
+      "label": "modified",
+      "type": "output-concept",
+      "description": "Last modification time.",
+      "children": []
+    },
+    "filename": {
+      "label": "filename",
+      "type": "output-concept",
+      "description": "File or directory name.",
+      "children": []
     },
     "mkdir": {
-      "center": "mkdir",
+      "label": "mkdir",
       "type": "command",
-      "nodes": [
-        {
-          "id": "mkdir-basic",
-          "label": "directory",
-          "type": "syntax",
-          "syntax": "mkdir projects",
-          "description": "Create a new directory named projects."
-        },
-        {
-          "id": "mkdir-multiple",
-          "label": "multiple",
-          "type": "variant",
-          "syntax": "mkdir documents backups temp",
-          "description": "Create several directories with one command."
-        },
-        {
-          "id": "mkdir-p",
-          "label": "-p",
-          "type": "option",
-          "syntax": "mkdir -p documents/projects/linux",
-          "description": "Create missing parent directories along the path."
-        }
+      "description": "Create directories.",
+      "syntax": "mkdir DIRECTORY",
+      "children": [
+        "mkdir-p"
       ]
+    },
+    "mkdir-p": {
+      "label": "-p",
+      "type": "option",
+      "description": "Create missing parent directories along the path.",
+      "syntax": "mkdir -p documents/projects/linux",
+      "children": []
     },
     "touch": {
-      "center": "touch",
+      "label": "touch",
       "type": "command",
-      "nodes": [
-        {
-          "id": "touch-basic",
-          "label": "file",
-          "type": "syntax",
-          "syntax": "touch notes.txt",
-          "description": "Create an empty file if it does not already exist."
-        },
-        {
-          "id": "touch-multiple",
-          "label": "multiple",
-          "type": "variant",
-          "syntax": "touch notes.txt todo.txt",
-          "description": "Create several empty files with one command."
-        },
-        {
-          "id": "touch-path",
-          "label": "path",
-          "type": "variant",
-          "syntax": "touch documents/report.txt",
-          "description": "Create a file at a path inside an existing directory."
-        }
-      ]
+      "description": "Create an empty file or update a file timestamp.",
+      "syntax": "touch FILE",
+      "children": []
     },
     "cp": {
-      "center": "cp",
+      "label": "cp",
       "type": "command",
-      "nodes": [
-        {
-          "id": "cp-file-dir",
-          "label": "to directory",
-          "type": "variant",
-          "syntax": "cp notes.txt backups/",
-          "description": "Copy a file into another directory and keep its name."
-        },
-        {
-          "id": "cp-new-name",
-          "label": "new name",
-          "type": "variant",
-          "syntax": "cp report.txt report-copy.txt",
-          "description": "Copy a file and give the copy a different name."
-        },
-        {
-          "id": "cp-model",
-          "label": "source → destination",
-          "type": "syntax",
-          "syntax": "cp source destination",
-          "description": "cp reads a source path and writes a copy to the destination."
-        }
-      ]
+      "description": "Copy files or directories.",
+      "syntax": "cp SOURCE DESTINATION",
+      "children": []
     },
     "mv": {
-      "center": "mv",
+      "label": "mv",
       "type": "command",
-      "nodes": [
-        {
-          "id": "mv-move",
-          "label": "move",
-          "type": "variant",
-          "syntax": "mv todo.txt documents/",
-          "description": "Move an existing file into another directory."
-        },
-        {
-          "id": "mv-rename",
-          "label": "rename",
-          "type": "variant",
-          "syntax": "mv notes.txt notes-old.txt",
-          "description": "Rename an existing file."
-        },
-        {
-          "id": "mv-model",
-          "label": "source → destination",
-          "type": "syntax",
-          "syntax": "mv source destination",
-          "description": "mv changes the path or name of an existing object rather than creating a copy."
-        }
-      ]
+      "description": "Move or rename files and directories.",
+      "syntax": "mv SOURCE DESTINATION",
+      "children": []
     },
     "rm": {
-      "center": "rm",
+      "label": "rm",
       "type": "command",
-      "nodes": [
-        {
-          "id": "rm-file",
-          "label": "file",
-          "type": "syntax",
-          "syntax": "rm file.txt",
-          "description": "Remove a file. There is normally no recycle bin in this workflow."
-        },
-        {
-          "id": "rm-r",
-          "label": "-r",
-          "type": "option",
-          "syntax": "rm -r directory",
-          "description": "Recursively remove a directory and its contents. DANGEROUS: verify the path before running it."
-        },
-        {
-          "id": "rmdir",
-          "label": "rmdir",
-          "type": "related-concept",
-          "syntax": "rmdir empty-directory",
-          "description": "Remove an empty directory only."
-        }
+      "description": "Remove files. Destructive: verify the target path.",
+      "syntax": "rm FILE",
+      "safety": "Destructive command. Verify the exact target path before running it.",
+      "children": [
+        "rm-r"
       ]
+    },
+    "rm-r": {
+      "label": "-r",
+      "type": "option",
+      "description": "Recursively remove a directory and its contents.",
+      "syntax": "rm -r DIRECTORY",
+      "safety": "Recursive destructive operation. Verify the target path before running it.",
+      "children": []
     },
     "cat": {
-      "center": "cat",
+      "label": "cat",
       "type": "command",
-      "nodes": [
-        {
-          "id": "cat-file",
-          "label": "whole file",
-          "type": "syntax",
-          "syntax": "cat system-notes.txt",
-          "description": "Display the complete contents of a small text file."
-        },
-        {
-          "id": "cat-model",
-          "label": "file → terminal",
-          "type": "related-concept",
-          "syntax": "cat FILE",
-          "description": "Read a file and write its complete contents to standard output."
-        }
-      ]
+      "description": "Display the complete contents of a small text file.",
+      "syntax": "cat FILE",
+      "children": []
     },
     "less": {
-      "center": "less",
+      "label": "less",
       "type": "command",
-      "nodes": [
-        {
-          "id": "less-file",
-          "label": "browse",
-          "type": "syntax",
-          "syntax": "less system-notes.txt",
-          "description": "Open a text file for interactive browsing."
-        },
-        {
-          "id": "less-quit",
-          "label": "q",
-          "type": "related-concept",
-          "syntax": "q",
-          "description": "Quit the less viewer and return to the shell."
-        }
-      ]
+      "description": "Browse a text file interactively.",
+      "syntax": "less FILE",
+      "children": []
     },
     "head": {
-      "center": "head",
+      "label": "head",
       "type": "command",
-      "nodes": [
-        {
-          "id": "head-default",
-          "label": "first 10",
-          "type": "syntax",
-          "syntax": "head FILE",
-          "description": "Show the first 10 lines of a file."
-        },
-        {
-          "id": "head-n",
-          "label": "-n N",
-          "type": "option",
-          "syntax": "head -n 3 app.log",
-          "description": "Show the first N lines of a file."
-        }
+      "description": "Display the beginning of a file.",
+      "syntax": "head FILE",
+      "children": [
+        "head-n"
       ]
+    },
+    "head-n": {
+      "label": "-n N",
+      "type": "option",
+      "description": "Show the first N lines.",
+      "syntax": "head -n 20 FILE",
+      "children": []
     },
     "tail": {
-      "center": "tail",
+      "label": "tail",
       "type": "command",
-      "nodes": [
-        {
-          "id": "tail-default",
-          "label": "last 10",
-          "type": "syntax",
-          "syntax": "tail FILE",
-          "description": "Show the last 10 lines of a file."
-        },
-        {
-          "id": "tail-n",
-          "label": "-n N",
-          "type": "option",
-          "syntax": "tail -n 3 app.log",
-          "description": "Show the last N lines of a file."
-        },
-        {
-          "id": "tail-f",
-          "label": "-f",
-          "type": "option",
-          "syntax": "tail -f app.log",
-          "description": "Follow a growing file and display new lines as they are written."
-        }
+      "description": "Display the end of a file or follow new lines.",
+      "syntax": "tail FILE",
+      "children": [
+        "tail-n",
+        "tail-f"
       ]
+    },
+    "tail-n": {
+      "label": "-n N",
+      "type": "option",
+      "description": "Show the last N lines.",
+      "syntax": "tail -n 20 app.log",
+      "children": []
+    },
+    "tail-f": {
+      "label": "-f",
+      "type": "option",
+      "description": "Follow a growing file and display new lines.",
+      "syntax": "tail -f app.log",
+      "children": []
     },
     "grep": {
-      "center": "grep",
+      "label": "grep",
       "type": "command",
-      "nodes": [
-        {
-          "id": "grep-basic",
-          "label": "pattern",
-          "type": "syntax",
-          "syntax": "grep ERROR app.log",
-          "description": "Show lines in app.log that contain ERROR."
-        },
-        {
-          "id": "grep-i",
-          "label": "-i",
-          "type": "option",
-          "syntax": "grep -i error app.log",
-          "description": "Ignore letter case while matching."
-        },
-        {
-          "id": "grep-n",
-          "label": "-n",
-          "type": "option",
-          "syntax": "grep -n ERROR app.log",
-          "description": "Show the line number for each matching line."
-        },
-        {
-          "id": "grep-v",
-          "label": "-v",
-          "type": "option",
-          "syntax": "grep -v ERROR app.log",
-          "description": "Invert the match and show lines that do not contain ERROR."
-        },
-        {
-          "id": "grep-c",
-          "label": "-c",
-          "type": "option",
-          "syntax": "grep -c ERROR app.log",
-          "description": "Output the number of matching lines."
-        },
-        {
-          "id": "grep-E",
-          "label": "-E",
-          "type": "option",
-          "syntax": "grep -E \"ERROR|WARNING\" app.log",
-          "description": "Use an extended pattern to match alternatives such as ERROR or WARNING."
-        },
-        {
-          "id": "grep-w",
-          "label": "-w",
-          "type": "option",
-          "syntax": "grep -w INFO app.log",
-          "description": "Match INFO as a whole word."
-        }
+      "description": "Search text and output matching lines.",
+      "syntax": "grep PATTERN FILE",
+      "children": [
+        "grep-i",
+        "grep-n",
+        "grep-v",
+        "grep-c",
+        "grep-E",
+        "grep-w"
       ]
+    },
+    "grep-i": {
+      "label": "-i",
+      "type": "option",
+      "description": "Ignore letter case.",
+      "syntax": "grep -i error app.log",
+      "children": []
+    },
+    "grep-n": {
+      "label": "-n",
+      "type": "option",
+      "description": "Show line numbers.",
+      "syntax": "grep -n ERROR app.log",
+      "children": []
+    },
+    "grep-v": {
+      "label": "-v",
+      "type": "option",
+      "description": "Invert the match.",
+      "syntax": "grep -v ERROR app.log",
+      "children": []
+    },
+    "grep-c": {
+      "label": "-c",
+      "type": "option",
+      "description": "Count matching lines.",
+      "syntax": "grep -c ERROR app.log",
+      "children": []
+    },
+    "grep-E": {
+      "label": "-E",
+      "type": "option",
+      "description": "Use extended patterns such as alternatives.",
+      "syntax": "grep -E \"ERROR|WARNING\" app.log",
+      "children": []
+    },
+    "grep-w": {
+      "label": "-w",
+      "type": "option",
+      "description": "Match a whole word.",
+      "syntax": "grep -w INFO app.log",
+      "children": []
     },
     "find": {
-      "center": "find",
+      "label": "find",
       "type": "command",
-      "nodes": [
-        {
-          "id": "find-name",
-          "label": "-name",
-          "type": "option",
-          "syntax": "find . -name \"app.log\"",
-          "description": "Search from the current directory downward for objects named app.log."
-        },
-        {
-          "id": "find-wildcard",
-          "label": "*.log",
-          "type": "variant",
-          "syntax": "find . -name \"*.log\"",
-          "description": "Find names ending in .log below the current directory."
-        },
-        {
-          "id": "find-iname",
-          "label": "-iname",
-          "type": "option",
-          "syntax": "find . -iname \"*.txt\"",
-          "description": "Match names without case sensitivity."
-        },
-        {
-          "id": "find-type-f",
-          "label": "-type f",
-          "type": "option",
-          "syntax": "find . -type f -name \"*.log\"",
-          "description": "Restrict the search to regular files."
-        },
-        {
-          "id": "find-type-d",
-          "label": "-type d",
-          "type": "option",
-          "syntax": "find . -type d",
-          "description": "Restrict the search to directories."
-        }
+      "description": "Search directory trees for matching filesystem objects.",
+      "syntax": "find PATH TESTS",
+      "children": [
+        "find-name",
+        "find-iname",
+        "find-type-f",
+        "find-type-d"
       ]
     },
-    "filesystem": {
-      "center": "Filesystem",
-      "type": "domain",
-      "nodes": [
-        {
-          "id": "pwd",
-          "label": "pwd",
-          "type": "command",
-          "description": "Print the current working directory."
-        },
-        {
-          "id": "cd",
-          "label": "cd",
-          "type": "command",
-          "description": "Change the current working directory."
-        },
-        {
-          "id": "ls",
-          "label": "ls",
-          "type": "command",
-          "description": "List directory contents.",
-          "target": "ls"
-        },
-        {
-          "id": "mkdir",
-          "label": "mkdir",
-          "type": "command",
-          "description": "Create directories.",
-          "target": "mkdir"
-        },
-        {
-          "id": "touch",
-          "label": "touch",
-          "type": "command",
-          "description": "Create an empty file or update a file timestamp.",
-          "target": "touch"
-        },
-        {
-          "id": "cp",
-          "label": "cp",
-          "type": "command",
-          "description": "Copy files or directories.",
-          "target": "cp"
-        },
-        {
-          "id": "mv",
-          "label": "mv",
-          "type": "command",
-          "description": "Move or rename files and directories.",
-          "target": "mv"
-        },
-        {
-          "id": "rm",
-          "label": "rm",
-          "type": "command",
-          "description": "Remove files. Use recursive removal with care.",
-          "target": "rm"
-        }
+    "find-name": {
+      "label": "-name",
+      "type": "option",
+      "description": "Match an exact or wildcard name, case-sensitively.",
+      "syntax": "find . -name \"*.log\"",
+      "children": []
+    },
+    "find-iname": {
+      "label": "-iname",
+      "type": "option",
+      "description": "Match names without case sensitivity.",
+      "syntax": "find . -iname \"*.txt\"",
+      "children": []
+    },
+    "find-type-f": {
+      "label": "-type f",
+      "type": "option",
+      "description": "Restrict results to regular files.",
+      "syntax": "find . -type f",
+      "children": []
+    },
+    "find-type-d": {
+      "label": "-type d",
+      "type": "option",
+      "description": "Restrict results to directories.",
+      "syntax": "find . -type d",
+      "children": []
+    },
+    "pipe": {
+      "label": "|",
+      "type": "operator",
+      "description": "Pass stdout from one command to stdin of the next.",
+      "syntax": "command1 | command2",
+      "children": [
+        "pipe-example"
       ]
     },
-    "text": {
-      "center": "Text",
-      "type": "domain",
-      "nodes": [
-        {
-          "id": "cat",
-          "label": "cat",
-          "type": "command",
-          "description": "Display file contents.",
-          "target": "cat"
-        },
-        {
-          "id": "less",
-          "label": "less",
-          "type": "command",
-          "description": "Browse a text file interactively.",
-          "target": "less"
-        },
-        {
-          "id": "head",
-          "label": "head",
-          "type": "command",
-          "description": "Display the beginning of a file.",
-          "target": "head"
-        },
-        {
-          "id": "tail",
-          "label": "tail",
-          "type": "command",
-          "description": "Display the end of a file or follow new lines.",
-          "target": "tail"
-        }
+    "pipe-example": {
+      "label": "filter → filter",
+      "type": "example",
+      "description": "Use a second grep to narrow the first result.",
+      "syntax": "grep ERROR app.log | grep Login",
+      "children": []
+    },
+    "redirect-overwrite": {
+      "label": ">",
+      "type": "operator",
+      "description": "Redirect output to a file, replacing previous contents.",
+      "syntax": "command > file",
+      "children": []
+    },
+    "redirect-append": {
+      "label": ">>",
+      "type": "operator",
+      "description": "Append redirected output to the end of a file.",
+      "syntax": "command >> file",
+      "children": []
+    },
+    "wc": {
+      "label": "wc",
+      "type": "command",
+      "description": "Count lines, words, or bytes.",
+      "syntax": "wc FILE",
+      "children": [
+        "wc-l",
+        "wc-w",
+        "wc-c"
       ]
     },
-    "search": {
-      "center": "Search",
-      "type": "domain",
-      "nodes": [
-        {
-          "id": "grep",
-          "label": "grep",
-          "type": "command",
-          "description": "Search text and output matching lines.",
-          "target": "grep"
-        },
-        {
-          "id": "find",
-          "label": "find",
-          "type": "command",
-          "description": "Search directory trees for matching files or directories.",
-          "target": "find"
-        }
+    "wc-l": {
+      "label": "-l",
+      "type": "option",
+      "description": "Count lines.",
+      "syntax": "wc -l events.log",
+      "children": []
+    },
+    "wc-w": {
+      "label": "-w",
+      "type": "option",
+      "description": "Count words.",
+      "syntax": "wc -w events.log",
+      "children": []
+    },
+    "wc-c": {
+      "label": "-c",
+      "type": "option",
+      "description": "Count bytes.",
+      "syntax": "wc -c events.log",
+      "children": []
+    },
+    "sort": {
+      "label": "sort",
+      "type": "command",
+      "description": "Sort lines of text.",
+      "syntax": "sort FILE",
+      "children": []
+    },
+    "uniq": {
+      "label": "uniq",
+      "type": "command",
+      "description": "Collapse or count adjacent duplicate lines.",
+      "syntax": "sort FILE | uniq",
+      "children": [
+        "uniq-c"
       ]
+    },
+    "uniq-c": {
+      "label": "-c",
+      "type": "option",
+      "description": "Prefix each unique line with its occurrence count.",
+      "syntax": "sort FILE | uniq -c",
+      "children": []
+    },
+    "cut": {
+      "label": "cut",
+      "type": "command",
+      "description": "Extract fields from structured text.",
+      "syntax": "cut -d \":\" -f 2 users.txt",
+      "children": [
+        "cut-field"
+      ]
+    },
+    "cut-field": {
+      "label": "-d / -f",
+      "type": "option",
+      "description": "Choose a delimiter and field number.",
+      "syntax": "cut -d \":\" -f 3 users.txt",
+      "children": []
+    },
+    "chmod": {
+      "label": "chmod",
+      "type": "command",
+      "description": "Change file or directory permission bits.",
+      "syntax": "chmod MODE FILE",
+      "safety": "Permission changes can remove required access. Verify the target and intended mode.",
+      "children": [
+        "chmod-symbolic",
+        "chmod-644",
+        "chmod-600",
+        "chmod-640"
+      ]
+    },
+    "chmod-symbolic": {
+      "label": "u/g/o ± rwx",
+      "type": "variant",
+      "description": "Change selected permission bits symbolically.",
+      "syntax": "chmod u+w report.txt",
+      "children": []
+    },
+    "chmod-644": {
+      "label": "644",
+      "type": "variant",
+      "description": "Owner read/write; group and others read-only.",
+      "syntax": "chmod 644 report.txt",
+      "children": []
+    },
+    "chmod-600": {
+      "label": "600",
+      "type": "variant",
+      "description": "Owner read/write only.",
+      "syntax": "chmod 600 report.txt",
+      "children": []
+    },
+    "chmod-640": {
+      "label": "640",
+      "type": "variant",
+      "description": "Owner read/write; group read; others none.",
+      "syntax": "chmod 640 report.txt",
+      "children": []
+    },
+    "chown": {
+      "label": "chown",
+      "type": "command",
+      "description": "Change owner and optionally group.",
+      "syntax": "sudo chown OWNER[:GROUP] FILE",
+      "safety": "Ownership changes often require elevated privileges. Verify the target first.",
+      "children": []
+    },
+    "sudo": {
+      "label": "sudo",
+      "type": "command",
+      "description": "Run the following command with elevated privileges.",
+      "syntax": "sudo COMMAND",
+      "safety": "Read and verify the complete command before running it with elevated privileges.",
+      "children": []
+    },
+    "ps": {
+      "label": "ps",
+      "type": "command",
+      "description": "Show a snapshot of processes.",
+      "syntax": "ps",
+      "children": [
+        "ps-f",
+        "ps-aux",
+        "pid",
+        "ppid"
+      ]
+    },
+    "ps-f": {
+      "label": "-f",
+      "type": "option",
+      "description": "Fuller listing including PID and PPID.",
+      "syntax": "ps -f",
+      "children": []
+    },
+    "ps-aux": {
+      "label": "aux",
+      "type": "variant",
+      "description": "Broad system process snapshot with CPU and memory.",
+      "syntax": "ps aux",
+      "children": []
+    },
+    "pid": {
+      "label": "PID",
+      "type": "concept",
+      "description": "Unique Process ID.",
+      "children": []
+    },
+    "ppid": {
+      "label": "PPID",
+      "type": "concept",
+      "description": "Parent Process ID.",
+      "children": []
+    },
+    "top": {
+      "label": "top",
+      "type": "command",
+      "description": "Monitor processes and resources in real time.",
+      "syntax": "top",
+      "children": [
+        "cpu",
+        "mem",
+        "state"
+      ]
+    },
+    "cpu": {
+      "label": "%CPU",
+      "type": "output-concept",
+      "description": "Processor usage for a process.",
+      "children": []
+    },
+    "mem": {
+      "label": "%MEM",
+      "type": "output-concept",
+      "description": "Memory usage for a process.",
+      "children": []
+    },
+    "state": {
+      "label": "state",
+      "type": "output-concept",
+      "description": "Process state such as R or S.",
+      "children": []
+    },
+    "kill": {
+      "label": "kill",
+      "type": "command",
+      "description": "Send a signal to a process.",
+      "syntax": "kill PID",
+      "safety": "Verify the PID and command before sending a signal.",
+      "children": [
+        "sigterm",
+        "sigkill"
+      ]
+    },
+    "sigterm": {
+      "label": "SIGTERM",
+      "type": "variant",
+      "description": "Request normal termination.",
+      "syntax": "kill PID",
+      "children": []
+    },
+    "sigkill": {
+      "label": "SIGKILL",
+      "type": "variant",
+      "description": "Force immediate termination; use only when needed.",
+      "syntax": "kill -9 PID",
+      "safety": "Forced termination cannot be handled by the target process.",
+      "children": []
+    },
+    "ip": {
+      "label": "ip",
+      "type": "command",
+      "description": "Inspect network interfaces and addresses.",
+      "syntax": "ip addr",
+      "children": [
+        "ip-addr",
+        "loopback"
+      ]
+    },
+    "ip-addr": {
+      "label": "addr",
+      "type": "variant",
+      "description": "Show interfaces and assigned addresses.",
+      "syntax": "ip addr",
+      "children": []
+    },
+    "loopback": {
+      "label": "127.0.0.1",
+      "type": "concept",
+      "description": "Loopback address for the local machine.",
+      "children": []
+    },
+    "ping": {
+      "label": "ping",
+      "type": "command",
+      "description": "Test network reachability using ICMP.",
+      "syntax": "ping HOST",
+      "children": [
+        "ping-c",
+        "ping-dns"
+      ]
+    },
+    "ping-c": {
+      "label": "-c N",
+      "type": "option",
+      "description": "Send a fixed number of echo requests.",
+      "syntax": "ping -c 4 8.8.8.8",
+      "children": []
+    },
+    "ping-dns": {
+      "label": "hostname",
+      "type": "concept",
+      "description": "Using a hostname adds DNS resolution before reachability testing.",
+      "syntax": "ping -c 4 google.com",
+      "children": []
+    },
+    "curl": {
+      "label": "curl",
+      "type": "command",
+      "description": "Send requests to URLs and inspect HTTP/HTTPS responses.",
+      "syntax": "curl URL",
+      "children": [
+        "curl-I",
+        "http-status"
+      ]
+    },
+    "curl-I": {
+      "label": "-I",
+      "type": "option",
+      "description": "Fetch response headers only.",
+      "syntax": "curl -I https://example.com",
+      "children": []
+    },
+    "http-status": {
+      "label": "HTTP status",
+      "type": "output-concept",
+      "description": "Status returned by the HTTP service, such as 200.",
+      "children": []
+    },
+    "ss": {
+      "label": "ss",
+      "type": "command",
+      "description": "Inspect sockets, listening ports, and related processes.",
+      "syntax": "ss -ltn",
+      "children": [
+        "ss-ltn",
+        "ss-ltnp",
+        "listen"
+      ]
+    },
+    "ss-ltn": {
+      "label": "-ltn",
+      "type": "variant",
+      "description": "Show listening TCP sockets with numeric addresses and ports.",
+      "syntax": "ss -ltn",
+      "children": []
+    },
+    "ss-ltnp": {
+      "label": "-ltnp",
+      "type": "variant",
+      "description": "Also request process information where permitted.",
+      "syntax": "ss -ltnp",
+      "children": []
+    },
+    "listen": {
+      "label": "LISTEN",
+      "type": "output-concept",
+      "description": "Socket is waiting for incoming TCP connections.",
+      "children": []
+    },
+    "systemctl": {
+      "label": "systemctl",
+      "type": "command",
+      "description": "Inspect and control systemd units.",
+      "syntax": "systemctl status UNIT",
+      "children": [
+        "systemctl-status",
+        "systemctl-active",
+        "systemctl-enabled",
+        "systemctl-running",
+        "systemctl-timers"
+      ]
+    },
+    "systemctl-status": {
+      "label": "status",
+      "type": "variant",
+      "description": "Show current unit state and runtime details.",
+      "syntax": "systemctl status ssh",
+      "children": []
+    },
+    "systemctl-active": {
+      "label": "is-active",
+      "type": "variant",
+      "description": "Check whether a unit is running now.",
+      "syntax": "systemctl is-active ssh",
+      "children": []
+    },
+    "systemctl-enabled": {
+      "label": "is-enabled",
+      "type": "variant",
+      "description": "Check automatic-start configuration.",
+      "syntax": "systemctl is-enabled ssh",
+      "children": []
+    },
+    "systemctl-running": {
+      "label": "running services",
+      "type": "variant",
+      "description": "List currently running services.",
+      "syntax": "systemctl --type=service --state=running",
+      "children": []
+    },
+    "systemctl-timers": {
+      "label": "timers",
+      "type": "variant",
+      "description": "List systemd timers.",
+      "syntax": "systemctl list-timers --all",
+      "children": []
+    },
+    "journalctl": {
+      "label": "journalctl",
+      "type": "command",
+      "description": "Investigate systemd journal events.",
+      "syntax": "journalctl",
+      "children": [
+        "journal-u",
+        "journal-n",
+        "journal-since",
+        "journal-p",
+        "journal-b",
+        "journal-no-pager"
+      ]
+    },
+    "journal-u": {
+      "label": "-u UNIT",
+      "type": "option",
+      "description": "Show events for a specific unit.",
+      "syntax": "journalctl -u ssh",
+      "children": []
+    },
+    "journal-n": {
+      "label": "-n N",
+      "type": "option",
+      "description": "Show the last N matching entries.",
+      "syntax": "journalctl -u ssh -n 20",
+      "children": []
+    },
+    "journal-since": {
+      "label": "--since",
+      "type": "option",
+      "description": "Filter journal entries by time.",
+      "syntax": "journalctl --since \"1 hour ago\"",
+      "children": []
+    },
+    "journal-p": {
+      "label": "-p",
+      "type": "option",
+      "description": "Filter by priority.",
+      "syntax": "journalctl -p warning",
+      "children": []
+    },
+    "journal-b": {
+      "label": "-b",
+      "type": "option",
+      "description": "Limit results to the current boot.",
+      "syntax": "journalctl -b",
+      "children": []
+    },
+    "journal-no-pager": {
+      "label": "--no-pager",
+      "type": "option",
+      "description": "Print directly instead of opening a pager.",
+      "syntax": "journalctl --no-pager",
+      "children": []
     }
-  },
-  "domains": [
-    {
-      "domain": "Filesystem",
-      "tasks": [
-        {
-          "task": "Show the current directory",
-          "node": "pwd",
-          "command": "pwd",
-          "example": "pwd"
-        },
-        {
-          "task": "Move to another directory",
-          "node": "cd",
-          "command": "cd",
-          "example": "cd /home/sadmin"
-        },
-        {
-          "task": "Move to the parent directory",
-          "node": "cd",
-          "command": "cd",
-          "example": "cd .."
-        },
-        {
-          "task": "Return to the home directory",
-          "node": "cd",
-          "command": "cd",
-          "example": "cd ~"
-        },
-        {
-          "task": "List directory contents",
-          "node": "ls",
-          "command": "ls",
-          "example": "ls"
-        },
-        {
-          "task": "Show hidden files",
-          "node": "ls-a",
-          "command": "ls",
-          "options": [
-            "-a"
-          ],
-          "example": "ls -a"
-        },
-        {
-          "task": "Show a detailed directory listing",
-          "node": "ls-l",
-          "command": "ls",
-          "options": [
-            "-l"
-          ],
-          "example": "ls -l"
-        },
-        {
-          "task": "Create a directory",
-          "node": "mkdir",
-          "command": "mkdir",
-          "example": "mkdir projects"
-        },
-        {
-          "task": "Create nested directories",
-          "node": "mkdir-p",
-          "command": "mkdir",
-          "options": [
-            "-p"
-          ],
-          "example": "mkdir -p documents/projects/linux"
-        },
-        {
-          "task": "Create an empty file",
-          "node": "touch",
-          "command": "touch",
-          "example": "touch notes.txt"
-        },
-        {
-          "task": "Copy a file",
-          "node": "cp",
-          "command": "cp",
-          "example": "cp notes.txt backups/"
-        },
-        {
-          "task": "Move a file",
-          "node": "mv-move",
-          "command": "mv",
-          "example": "mv todo.txt documents/"
-        },
-        {
-          "task": "Rename a file",
-          "node": "mv-rename",
-          "command": "mv",
-          "example": "mv notes.txt notes-old.txt"
-        },
-        {
-          "task": "Remove a file",
-          "node": "rm-file",
-          "command": "rm",
-          "example": "rm file.txt"
-        },
-        {
-          "task": "Remove a directory recursively",
-          "node": "rm-r",
-          "command": "rm",
-          "options": [
-            "-r"
-          ],
-          "example": "rm -r backups"
-        }
-      ]
-    },
-    {
-      "domain": "Text",
-      "tasks": [
-        {
-          "task": "Read a small text file",
-          "node": "cat-file",
-          "command": "cat",
-          "example": "cat system-notes.txt"
-        },
-        {
-          "task": "Browse a long text file",
-          "node": "less-file",
-          "command": "less",
-          "example": "less system-notes.txt"
-        },
-        {
-          "task": "Show the first lines of a file",
-          "node": "head-n",
-          "command": "head",
-          "options": [
-            "-n"
-          ],
-          "example": "head -n 3 app.log"
-        },
-        {
-          "task": "Show the last lines of a file",
-          "node": "tail-n",
-          "command": "tail",
-          "options": [
-            "-n"
-          ],
-          "example": "tail -n 3 app.log"
-        },
-        {
-          "task": "Follow new log entries",
-          "node": "tail-f",
-          "command": "tail",
-          "options": [
-            "-f"
-          ],
-          "example": "tail -f app.log"
-        }
-      ]
-    },
-    {
-      "domain": "Search",
-      "tasks": [
-        {
-          "task": "Find matching text in a file",
-          "node": "grep-basic",
-          "command": "grep",
-          "example": "grep ERROR app.log"
-        },
-        {
-          "task": "Search text without case sensitivity",
-          "node": "grep-i",
-          "command": "grep",
-          "options": [
-            "-i"
-          ],
-          "example": "grep -i error app.log"
-        },
-        {
-          "task": "Show line numbers for matches",
-          "node": "grep-n",
-          "command": "grep",
-          "options": [
-            "-n"
-          ],
-          "example": "grep -n ERROR app.log"
-        },
-        {
-          "task": "Show lines that do not match",
-          "node": "grep-v",
-          "command": "grep",
-          "options": [
-            "-v"
-          ],
-          "example": "grep -v ERROR app.log"
-        },
-        {
-          "task": "Count matching lines",
-          "node": "grep-c",
-          "command": "grep",
-          "options": [
-            "-c"
-          ],
-          "example": "grep -c ERROR app.log"
-        },
-        {
-          "task": "Search for alternative patterns",
-          "node": "grep-E",
-          "command": "grep",
-          "options": [
-            "-E"
-          ],
-          "example": "grep -E \"ERROR|WARNING\" app.log"
-        },
-        {
-          "task": "Find a file by name",
-          "node": "find-name",
-          "command": "find",
-          "options": [
-            "-name"
-          ],
-          "example": "find . -name \"app.log\""
-        },
-        {
-          "task": "Find files by extension",
-          "node": "find-wildcard",
-          "command": "find",
-          "options": [
-            "-name"
-          ],
-          "example": "find . -name \"*.log\""
-        },
-        {
-          "task": "Find names without case sensitivity",
-          "node": "find-iname",
-          "command": "find",
-          "options": [
-            "-iname"
-          ],
-          "example": "find . -iname \"*.txt\""
-        },
-        {
-          "task": "Find regular files only",
-          "node": "find-type-f",
-          "command": "find",
-          "options": [
-            "-type",
-            "f"
-          ],
-          "example": "find . -type f -name \"*.log\""
-        },
-        {
-          "task": "Find directories only",
-          "node": "find-type-d",
-          "command": "find",
-          "options": [
-            "-type",
-            "d"
-          ],
-          "example": "find . -type d"
-        }
-      ]
-    }
-  ]
+  }
 }

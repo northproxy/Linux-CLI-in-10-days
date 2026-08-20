@@ -2,550 +2,572 @@
  * Script: app.js
  *
  * Purpose:
- * Loads Linux CLI knowledge from JSON and renders the interactive Command Cloud.
+ * Renders the experimental Cards + Layered Knowledge Map interface.
  *
  * Project:
  * Linux CLI in 10 Days — learning and portfolio project.
  *
  * Learning focus:
- * Vanilla JavaScript, JSON loading, DOM manipulation, interaction state,
- * contextual navigation, touch interaction, radial positioning,
- * desktop tooltip behavior, pointer-reactive motion,
- * focus-based color theming, whole-cloud parallax,
- * magnetic pointer interaction, and dynamic connector lines.
+ * Vanilla JavaScript, JSON loading, DOM rendering, local graph layout,
+ * contextual navigation, responsive interaction, and accessible previews.
  *
  * Lifecycle:
- * Permanent project component.
+ * Experimental prototype. Keep separate from the validated temporary-focus version
+ * until the Cards + Graph direction is evaluated.
  */
 
-const cloudNodes = document.getElementById("cloud-nodes");
-const result = document.getElementById("command-result");
-const backButton = document.getElementById("back-button");
+const state = {
+  data: null,
+  mode: "overview",
+  currentArea: null,
+  currentNode: null,
+  history: []
+};
+
+const overviewView = document.getElementById("overview-view");
+const graphView = document.getElementById("graph-view");
+const areaGrid = document.getElementById("area-grid");
+const graphStage = document.getElementById("graph-stage");
+const graphNodes = document.getElementById("graph-nodes");
+const childLayerWrap = document.getElementById("child-layer-wrap");
+const childLayer = document.getElementById("child-layer");
+const deepLayerWrap = document.getElementById("deep-layer-wrap");
+const deepLayer = document.getElementById("deep-layer");
+const contextTitle = document.getElementById("context-title");
+const detailPanel = document.getElementById("detail-panel");
+const detailType = document.getElementById("detail-type");
+const detailTitle = document.getElementById("detail-title");
+const detailSyntax = document.getElementById("detail-syntax");
+const detailDescription = document.getElementById("detail-description");
+const detailSafety = document.getElementById("detail-safety");
 const breadcrumb = document.getElementById("breadcrumb");
+const transitionLayer = document.getElementById("transition-layer");
+const brandHome = document.getElementById("brand-home");
 
-let cloudData = {};
-let currentFocus = "linux";
-const focusHistory = [];
-let previewedTouchNode = null;
-
-
-const commandThemes = {
-  pwd: "theme-sky",
-  cd: "theme-lilac",
-  ls: "theme-mint",
-  cat: "theme-peach",
-  grep: "theme-yellow",
-  mkdir: "theme-pink",
-  touch: "theme-aqua",
-  cp: "theme-lavender",
-  mv: "theme-sage",
-  rm: "theme-coral"
-};
-
-function getThemeClass(focusId = currentFocus) {
-  if (focusId === "linux") {
-    return "";
+async function loadData() {
+  const response = await fetch("../data/map.json");
+  if (!response.ok) {
+    throw new Error(`Could not load data/map.json: HTTP ${response.status}`);
   }
-
-  const rootCommand = focusId.split("-")[0];
-  return commandThemes[rootCommand] ?? "theme-neutral";
+  state.data = await response.json();
+  renderOverview();
 }
 
-const motionState = {
-  pointerX: 0,
-  pointerY: 0,
-  inside: false,
-  animationFrameId: null,
-  cleanup: null
-};
+function renderOverview() {
+  state.mode = "overview";
+  state.currentArea = null;
+  state.currentNode = null;
+  state.history = [];
 
+  graphView.hidden = true;
+  graphView.classList.remove(
+    "graph-preparing",
+    "graph-revealing",
+    "nodes-wait",
+    "nodes-show",
+    "detail-wait",
+    "detail-show"
+  );
+  overviewView.hidden = false;
 
-const usesTouchInteraction = window.matchMedia(
-  "(hover: none), (pointer: coarse)"
-).matches;
+  transitionLayer.classList.remove("is-active", "is-moving", "is-dissolving");
+  transitionLayer.innerHTML = "";
+  transitionLayer.removeAttribute("style");
 
-const tooltip = document.createElement("div");
-tooltip.className = "cloud-tooltip";
-tooltip.setAttribute("role", "tooltip");
-tooltip.hidden = true;
-document.body.appendChild(tooltip);
+  areaGrid.classList.remove("is-transitioning");
+  detailPanel.hidden = true;
+  childLayer.classList.remove("has-deep-focus");
+  deepLayerWrap.hidden = true;
+  areaGrid.innerHTML = "";
 
-async function loadKnowledgeMap() {
-  try {
-    const response = await fetch("../data/map.json");
+  state.data.areas.forEach((area) => {
+    const card = document.createElement("button");
+    card.className = "area-card";
+    card.type = "button";
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    const commandLabels = area.commands
+      .slice(0, 8)
+      .map((id) => state.data.nodes[id]?.label ?? id);
 
-    const knowledgeMap = await response.json();
-    cloudData = knowledgeMap.cloud;
-    renderCloud();
-  } catch (error) {
-    console.error("Could not load data/map.json:", error);
-    result.textContent =
-      "Could not load the Linux CLI knowledge map. Check the browser console.";
-  }
+    card.innerHTML = `
+      <div>
+        <p class="kicker">Functional area</p>
+        <h3>${escapeHtml(area.label)}</h3>
+        <p>${escapeHtml(area.description)}</p>
+      </div>
+      <div class="command-preview">
+        ${commandLabels.map((label) => `<span class="command-chip">${escapeHtml(label)}</span>`).join("")}
+      </div>
+    `;
+
+    card.addEventListener("click", () => transitionIntoArea(area.id, card));
+    areaGrid.appendChild(card);
+  });
+
+  renderBreadcrumb();
 }
 
-function renderCloud() {
-  const view = cloudData[currentFocus];
 
-  if (!view) {
-    result.textContent = `Unknown cloud focus: ${currentFocus}`;
+function transitionIntoArea(areaId, card) {
+  const area = getArea(areaId);
+  if (!area || !card) return;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefersReducedMotion) {
+    enterArea(areaId);
     return;
   }
 
-  hideTooltip();
-  updateNavigation();
-  cloudNodes.innerHTML = "";
+  const startRect = card.getBoundingClientRect();
+  const computed = getComputedStyle(card);
 
-  const centerButton = document.createElement("button");
-  centerButton.className = "command-node main-command";
-  const focusTheme = getThemeClass();
-  if (focusTheme) {
-    centerButton.classList.add(focusTheme);
+  transitionLayer.innerHTML = `
+    <div class="transition-content">
+      <div>
+        <p class="kicker">Functional area</p>
+        <h3>${escapeHtml(area.label)}</h3>
+      </div>
+      <p>${escapeHtml(area.description)}</p>
+    </div>
+  `;
+
+  Object.assign(transitionLayer.style, {
+    left: `${startRect.left}px`,
+    top: `${startRect.top}px`,
+    width: `${startRect.width}px`,
+    height: `${startRect.height}px`,
+    background: computed.backgroundColor,
+    borderRadius: computed.borderRadius
+  });
+
+  transitionLayer.classList.add("is-active");
+  areaGrid.classList.add("is-transitioning");
+  card.classList.add("is-selected");
+
+  window.setTimeout(() => {
+    state.mode = "graph";
+    state.currentArea = areaId;
+    state.currentNode = null;
+    state.history = [];
+
+    overviewView.hidden = true;
+    graphView.hidden = false;
+
+    graphView.classList.remove("graph-revealing", "nodes-show", "detail-show");
+    graphView.classList.add("graph-preparing", "nodes-wait", "detail-wait");
+
+    renderGraph();
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const graphPanel = document.querySelector(".graph-panel");
+        const targetRect = graphPanel.getBoundingClientRect();
+        const targetStyle = getComputedStyle(graphPanel);
+
+        transitionLayer.classList.add("is-moving");
+
+        Object.assign(transitionLayer.style, {
+          left: `${targetRect.left}px`,
+          top: `${targetRect.top}px`,
+          width: `${targetRect.width}px`,
+          height: `${targetRect.height}px`,
+          borderRadius: targetStyle.borderRadius
+        });
+
+        window.setTimeout(() => {
+          graphView.classList.remove("graph-preparing");
+          graphView.classList.add("graph-revealing");
+        }, 360);
+
+        window.setTimeout(() => {
+          transitionLayer.classList.add("is-dissolving");
+          graphView.classList.remove("nodes-wait");
+          graphView.classList.add("nodes-show");
+        }, 455);
+
+        window.setTimeout(() => {
+          graphView.classList.remove("detail-wait");
+          graphView.classList.add("detail-show");
+        }, 565);
+
+        window.setTimeout(() => {
+          transitionLayer.classList.remove("is-active", "is-moving", "is-dissolving");
+          transitionLayer.innerHTML = "";
+          transitionLayer.removeAttribute("style");
+
+          areaGrid.classList.remove("is-transitioning");
+  detailPanel.hidden = true;
+  childLayer.classList.remove("has-deep-focus");
+  deepLayerWrap.hidden = true;
+          card.classList.remove("is-selected");
+
+          graphView.classList.remove(
+            "graph-revealing",
+            "nodes-show",
+            "detail-show"
+          );
+        }, 760);
+      });
+    });
+  }, 150);
+}
+
+function enterArea(areaId) {
+  const area = getArea(areaId);
+  if (!area) return;
+
+  state.mode = "graph";
+  state.currentArea = areaId;
+  state.currentNode = null;
+  state.history = [];
+
+  overviewView.hidden = true;
+  graphView.hidden = false;
+  detailPanel.hidden = true;
+
+  renderGraph();
+}
+
+function enterNode(nodeId) {
+  const node = state.data.nodes[nodeId];
+  if (!node) return;
+
+  if (!node.children?.length) {
+    showDetails(node);
+    return;
   }
-  centerButton.textContent = view.center;
-  cloudNodes.appendChild(centerButton);
 
-  const surroundingNodes = document.createElement("div");
-  surroundingNodes.className = "command-variants";
+  state.currentNode = nodeId;
+  renderGraph();
+}
 
-  const nodeCount = view.nodes.length;
+function goBack() {
+  if (state.history.length) {
+    state.currentNode = state.history.pop() || null;
+    renderGraph();
+    return;
+  }
 
-  view.nodes.forEach((node, index) => {
-    const button = document.createElement("button");
-    button.className = "command-node";
+  if (state.currentNode) {
+    state.currentNode = null;
+    renderGraph();
+    return;
+  }
 
-    const nodeTheme =
-      currentFocus === "linux"
-        ? commandThemes[node.id] ?? "theme-neutral"
-        : focusTheme || "theme-neutral";
+  renderOverview();
+}
 
-    button.classList.add(nodeTheme);
-    button.style.setProperty("--enter-delay", `${index * 45}ms`);
-    button.textContent = node.label;
 
-    positionNode(button, index, nodeCount);
+function renderChildPreview(node) {
+  // Temporary hover preview only. Persistent state is not changed.
+  childLayer.innerHTML = "";
+  childLayer.classList.remove("has-deep-focus");
+  childLayer.classList.add("is-hover-preview");
+  deepLayerWrap.hidden = true;
+  deepLayer.innerHTML = "";
+
+  if (!node?.children?.length) {
+    childLayerWrap.hidden = true;
+    return;
+  }
+
+  childLayerWrap.hidden = false;
+
+  node.children.forEach((childId) => {
+    const child = state.data.nodes[childId];
+    if (!child) return;
+
+    const preview = makeLayerNode(child, childId);
+    preview.tabIndex = -1;
+    preview.setAttribute("aria-hidden", "true");
+    childLayer.appendChild(preview);
+  });
+}
+
+function restorePersistentLayers() {
+  childLayer.classList.remove("is-hover-preview");
+  renderGraph();
+}
+
+function renderGraph() {
+  const area = getArea(state.currentArea);
+  if (!area) return;
+
+  contextTitle.textContent = area.label;
+
+  graphNodes.innerHTML = "";
+  childLayer.innerHTML = "";
+  deepLayer.innerHTML = "";
+
+  // Every render starts from a clean layered DOM state.
+  childLayerWrap.hidden = true;
+  deepLayerWrap.hidden = true;
+  childLayer.classList.remove("has-deep-focus", "is-hover-preview");
+
+  const selectedNode = state.currentNode
+    ? state.data.nodes[state.currentNode]
+    : null;
+
+  const parentNodeId = state.history.length
+    ? state.history[state.history.length - 1]
+    : null;
+
+  const parentNode = parentNodeId
+    ? state.data.nodes[parentNodeId]
+    : null;
+
+  // Top command layer always shows the area's commands.
+  area.commands.forEach((nodeId) => {
+    const node = state.data.nodes[nodeId];
+    if (!node) return;
+
+    const button = makeLayerNode(node, nodeId);
+
+    const activeTopId = parentNodeId || state.currentNode;
+    if (nodeId === activeTopId) {
+      button.classList.add("is-selected");
+    }
 
     button.addEventListener("mouseenter", () => {
-      if (!usesTouchInteraction) {
-        showTooltip(button, node);
-      }
-      showPreview(node);
+      showDetails(node);
+      renderChildPreview(node);
     });
 
     button.addEventListener("mouseleave", () => {
-      if (!usesTouchInteraction) {
-        hideTooltip();
-      }
-      clearPreview();
+      restorePersistentLayers();
     });
 
     button.addEventListener("focus", () => {
-      if (!usesTouchInteraction) {
-        showTooltip(button, node);
-      }
+      showDetails(node);
+      renderChildPreview(node);
     });
 
     button.addEventListener("blur", () => {
-      if (!usesTouchInteraction) {
-        hideTooltip();
-      }
+      restorePersistentLayers();
     });
 
     button.addEventListener("click", () => {
-      if (usesTouchInteraction) {
-        handleTouchNode(button, node);
+      // Switching top-level commands always clears any previous branch state.
+      state.history = [];
+      deepLayerWrap.hidden = true;
+      deepLayer.innerHTML = "";
+      childLayer.classList.remove("has-deep-focus");
+
+      if (node.children?.length) {
+        state.currentNode = nodeId;
+        renderGraph();
         return;
       }
-      handleNodeClick(node);
+
+      // Leaf top-level command:
+      // remove the previous command's options/concepts completely.
+      state.currentNode = null;
+      childLayerWrap.hidden = true;
+      childLayer.innerHTML = "";
+
+      showDetails(node);
+      renderBreadcrumb();
     });
 
-    surroundingNodes.appendChild(button);
+    graphNodes.appendChild(button);
   });
 
-  cloudNodes.appendChild(surroundingNodes);
-  enableCloudMotion();
-}
+  // LEVEL 2:
+  // If we are deep, preserve the parent's option layer.
+  const level2Source = parentNode || selectedNode;
 
-function enableCloudMotion() {
-  if (motionState.cleanup) {
-    motionState.cleanup();
-    motionState.cleanup = null;
-  }
+  if (level2Source?.children?.length) {
+    childLayerWrap.hidden = false;
+    childLayer.classList.toggle("has-deep-focus", Boolean(parentNode));
 
-  if (motionState.animationFrameId) {
-    cancelAnimationFrame(motionState.animationFrameId);
-    motionState.animationFrameId = null;
-  }
+    level2Source.children.forEach((childId) => {
+      const child = state.data.nodes[childId];
+      if (!child) return;
 
-  cloudNodes.style.setProperty("--cloud-x", "0px");
-  cloudNodes.style.setProperty("--cloud-y", "0px");
+      const button = makeLayerNode(child, childId);
 
-  const connectorLayer = createConnectorLayer();
-
-  if (usesTouchInteraction) {
-    updateConnectorLines(connectorLayer);
-    return;
-  }
-
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    updateConnectorLines(connectorLayer);
-    return;
-  }
-
-  const animatedNodes = [
-    ...cloudNodes.querySelectorAll(".command-variants .command-node")
-  ];
-
-  if (!animatedNodes.length) {
-    return;
-  }
-
-  animatedNodes.forEach((node) => {
-    node.dataset.motionPhase = String(Math.random() * Math.PI * 2);
-    node.dataset.motionRadius = String(3 + Math.random() * 4);
-    node.dataset.motionSpeed = String(0.0005 + Math.random() * 0.0006);
-    node.dataset.magnetX = "0";
-    node.dataset.magnetY = "0";
-  });
-
-  let cloudTargetX = 0;
-  let cloudTargetY = 0;
-  let cloudCurrentX = 0;
-  let cloudCurrentY = 0;
-
-  const handlePointerMove = (event) => {
-    const rect = cloudNodes.getBoundingClientRect();
-
-    motionState.pointerX = event.clientX - rect.left;
-    motionState.pointerY = event.clientY - rect.top;
-    motionState.inside = true;
-
-    const normalizedX = motionState.pointerX / rect.width - 0.5;
-    const normalizedY = motionState.pointerY / rect.height - 0.5;
-
-    cloudTargetX = normalizedX * 8;
-    cloudTargetY = normalizedY * 6;
-  };
-
-  const handlePointerLeave = () => {
-    motionState.inside = false;
-    cloudTargetX = 0;
-    cloudTargetY = 0;
-  };
-
-  cloudNodes.addEventListener("pointermove", handlePointerMove);
-  cloudNodes.addEventListener("pointerleave", handlePointerLeave);
-
-  motionState.cleanup = () => {
-    cloudNodes.removeEventListener("pointermove", handlePointerMove);
-    cloudNodes.removeEventListener("pointerleave", handlePointerLeave);
-  };
-
-  const animate = (time) => {
-    cloudCurrentX += (cloudTargetX - cloudCurrentX) * 0.05;
-    cloudCurrentY += (cloudTargetY - cloudCurrentY) * 0.05;
-
-    cloudNodes.style.setProperty("--cloud-x", `${cloudCurrentX.toFixed(2)}px`);
-    cloudNodes.style.setProperty("--cloud-y", `${cloudCurrentY.toFixed(2)}px`);
-
-    const cloudRect = cloudNodes.getBoundingClientRect();
-
-    animatedNodes.forEach((node) => {
-      const nodeRect = node.getBoundingClientRect();
-
-      const nodeCenterX =
-        nodeRect.left - cloudRect.left + nodeRect.width / 2;
-      const nodeCenterY =
-        nodeRect.top - cloudRect.top + nodeRect.height / 2;
-
-      const phase = Number(node.dataset.motionPhase);
-      const radius = Number(node.dataset.motionRadius);
-      const speed = Number(node.dataset.motionSpeed);
-
-      const floatX = Math.cos(time * speed + phase) * radius;
-      const floatY = Math.sin(time * speed + phase) * radius * 0.7;
-
-      let targetMagnetX = 0;
-      let targetMagnetY = 0;
-
-      if (motionState.inside) {
-        const dx = motionState.pointerX - nodeCenterX;
-        const dy = motionState.pointerY - nodeCenterY;
-        const distance = Math.hypot(dx, dy);
-
-        const influenceRadius = 145;
-        const maxPull = 46;
-
-        if (distance < influenceRadius) {
-          const strength = 1 - distance / influenceRadius;
-          const easedStrength = strength * strength;
-
-          targetMagnetX = Math.max(
-            -maxPull,
-            Math.min(maxPull, dx * easedStrength * 0.72)
-          );
-
-          targetMagnetY = Math.max(
-            -maxPull,
-            Math.min(maxPull, dy * easedStrength * 0.72)
-          );
-        }
+      if (parentNode && childId === state.currentNode) {
+        button.classList.add("is-deep-selected");
       }
 
-      const currentMagnetX = Number(node.dataset.magnetX || 0);
-      const currentMagnetY = Number(node.dataset.magnetY || 0);
+      button.addEventListener("mouseenter", () => showDetails(child));
+      button.addEventListener("focus", () => showDetails(child));
 
-      const nextMagnetX =
-        currentMagnetX + (targetMagnetX - currentMagnetX) * 0.16;
-      const nextMagnetY =
-        currentMagnetY + (targetMagnetY - currentMagnetY) * 0.16;
+      button.addEventListener("click", () => {
+        if (child.children?.length) {
+          state.history = [level2Source === parentNode ? parentNodeId : state.currentNode];
+          state.currentNode = childId;
+          renderGraph();
+          return;
+        }
 
-      node.dataset.magnetX = String(nextMagnetX);
-      node.dataset.magnetY = String(nextMagnetY);
+        // If we are currently inside a deeper branch (for example ls → -l),
+        // clicking a dimmed sibling option exits that deep branch first.
+        // The parent command remains selected, the deep layer disappears,
+        // sibling options return to normal visibility, and details switch
+        // to the clicked option.
+        if (parentNode) {
+          state.currentNode = parentNodeId;
+          state.history = [];
+          renderGraph();
+          showDetails(child);
+          renderBreadcrumb();
+          return;
+        }
 
-      node.style.setProperty(
-        "--motion-x",
-        `${(floatX + nextMagnetX).toFixed(2)}px`
-      );
+        showDetails(child);
+      });
 
-      node.style.setProperty(
-        "--motion-y",
-        `${(floatY + nextMagnetY).toFixed(2)}px`
-      );
+      childLayer.appendChild(button);
+    });
+  } else {
+    childLayerWrap.hidden = true;
+    childLayer.classList.remove("has-deep-focus");
+  }
+
+  // LEVEL 3:
+  // Deep child concepts stay below the preserved option layer.
+  if (parentNode && selectedNode?.children?.length) {
+    deepLayerWrap.hidden = false;
+
+    selectedNode.children.forEach((deepId) => {
+      const deepNode = state.data.nodes[deepId];
+      if (!deepNode) return;
+
+      const button = makeLayerNode(deepNode, deepId);
+
+      button.addEventListener("mouseenter", () => showDetails(deepNode));
+      button.addEventListener("focus", () => showDetails(deepNode));
+      button.addEventListener("click", () => showDetails(deepNode));
+
+      deepLayer.appendChild(button);
     });
 
-    updateConnectorLines(connectorLayer);
-    motionState.animationFrameId = requestAnimationFrame(animate);
-  };
+    showDetails(selectedNode);
+  } else {
+    deepLayerWrap.hidden = true;
 
-  motionState.animationFrameId = requestAnimationFrame(animate);
+    if (selectedNode) {
+      showDetails(selectedNode);
+    } else {
+      // No command selected: keep the detail card hidden.
+      detailPanel.hidden = true;
+    }
+  }
+
+  if (selectedNode || parentNode) {
+    detailPanel.hidden = false;
+  }
+
+  renderBreadcrumb();
 }
 
-function createConnectorLayer() {
-  const existingLayer = cloudNodes.querySelector(".connector-layer");
+function makeLayerNode(node, nodeId) {
+  const button = document.createElement("button");
+  const hasChildren = Boolean(node.children?.length);
 
-  if (existingLayer) {
-    existingLayer.remove();
-  }
+  button.className = `layer-node${hasChildren ? " has-children" : ""}`;
+  button.type = "button";
+  button.dataset.nodeId = nodeId;
+  button.textContent = node.label;
 
-  const svg = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "svg"
-  );
-
-  svg.classList.add("connector-layer");
-  svg.setAttribute("aria-hidden", "true");
-  svg.setAttribute("focusable", "false");
-
-  const surroundingNodes = [
-    ...cloudNodes.querySelectorAll(".command-variants .command-node")
-  ];
-
-  surroundingNodes.forEach((node, index) => {
-    const line = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "line"
-    );
-
-    line.dataset.nodeIndex = String(index);
-    line.classList.add("connector-line");
-    svg.appendChild(line);
-  });
-
-  cloudNodes.prepend(svg);
-  return svg;
+  return button;
 }
 
-function updateConnectorLines(svg) {
-  if (!svg) {
-    return;
+function showDetails(item, forcedType = null) {
+  if (!item) return;
+
+  detailPanel.hidden = false;
+
+  detailType.textContent = forcedType || item.type || "Context";
+  detailTitle.textContent = item.label || "Context";
+  detailDescription.textContent = item.description || "";
+
+  if (item.syntax) {
+    detailSyntax.hidden = false;
+    detailSyntax.textContent = item.syntax;
+  } else {
+    detailSyntax.hidden = true;
+    detailSyntax.textContent = "";
   }
 
-  const centerNode = cloudNodes.querySelector(".main-command");
-  const surroundingNodes = [
-    ...cloudNodes.querySelectorAll(".command-variants .command-node")
-  ];
-  const lines = [...svg.querySelectorAll(".connector-line")];
-
-  if (!centerNode || !surroundingNodes.length) {
-    return;
+  if (item.safety) {
+    detailSafety.hidden = false;
+    detailSafety.textContent = `Safety: ${item.safety}`;
+  } else {
+    detailSafety.hidden = true;
+    detailSafety.textContent = "";
   }
+}
 
-  const cloudRect = cloudNodes.getBoundingClientRect();
-  const centerRect = centerNode.getBoundingClientRect();
+function renderBreadcrumb() {
+  breadcrumb.innerHTML = "";
 
-  const centerX =
-    centerRect.left - cloudRect.left + centerRect.width / 2;
-  const centerY =
-    centerRect.top - cloudRect.top + centerRect.height / 2;
-
-  svg.setAttribute("viewBox", `0 0 ${cloudRect.width} ${cloudRect.height}`);
-
-  surroundingNodes.forEach((node, index) => {
-    const line = lines[index];
-
-    if (!line) {
-      return;
+  const addCrumb = (label, handler = null) => {
+    if (breadcrumb.childNodes.length) {
+      const sep = document.createElement("span");
+      sep.textContent = "›";
+      breadcrumb.appendChild(sep);
     }
 
-    const nodeRect = node.getBoundingClientRect();
+    if (handler) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "crumb-button";
+      button.textContent = label;
+      button.addEventListener("click", handler);
+      breadcrumb.appendChild(button);
+    } else {
+      const span = document.createElement("span");
+      span.textContent = label;
+      breadcrumb.appendChild(span);
+    }
+  };
 
-    const nodeX =
-      nodeRect.left - cloudRect.left + nodeRect.width / 2;
-    const nodeY =
-      nodeRect.top - cloudRect.top + nodeRect.height / 2;
+  addCrumb("Linux", state.mode === "overview" ? null : renderOverview);
 
-    line.setAttribute("x1", centerX.toFixed(2));
-    line.setAttribute("y1", centerY.toFixed(2));
-    line.setAttribute("x2", nodeX.toFixed(2));
-    line.setAttribute("y2", nodeY.toFixed(2));
-  });
-}
-function positionNode(button, index, nodeCount) {
-  const angleStep = (2 * Math.PI) / nodeCount;
-  const startAngle = -Math.PI / 2;
-  const angle = startAngle + index * angleStep;
+  if (state.currentArea) {
+    const area = getArea(state.currentArea);
 
-  const radiusX = 42;
-  const radiusY = 38;
-
-  const x = 50 + radiusX * Math.cos(angle);
-  const y = 50 + radiusY * Math.sin(angle);
-
-  button.style.left = `${x}%`;
-  button.style.top = `${y}%`;
-}
-
-function updateNavigation() {
-  const path = [...focusHistory, currentFocus]
-    .map((focusId) => {
-      const label = cloudData[focusId]?.center ?? focusId;
-      return label === "LINUX" ? "Linux" : label;
-    })
-    .join(" › ");
-
-  breadcrumb.textContent = path;
-  backButton.hidden = focusHistory.length === 0;
-}
-
-function handleNodeClick(node) {
-  hideTooltip();
-
-  if (node.target && cloudData[node.target]) {
-    focusHistory.push(currentFocus);
-    currentFocus = node.target;
-
-    clearTouchSelection();
-    renderCloud();
-
-    result.textContent = `Explore ${cloudData[currentFocus].center} options.`;
-    return;
+    addCrumb(
+      area.label,
+      state.currentNode
+        ? () => {
+            state.currentNode = null;
+            renderGraph();
+          }
+        : null
+    );
   }
 
-  showPreview(node);
-}
-
-function getPreviewText(node) {
-  if (node.syntax) {
-    return `${node.syntax} — ${node.description}`;
+  if (state.currentNode) {
+    const node = state.data.nodes[state.currentNode];
+    addCrumb(node.label);
   }
-  return node.description;
 }
 
-function showPreview(node) {
-  result.textContent = getPreviewText(node);
+
+function getArea(id) {
+  return state.data.areas.find((area) => area.id === id);
 }
 
-function clearPreview() {
-  if (currentFocus === "linux") {
-    result.textContent = "Select a command to explore.";
-    return;
-  }
-
-  result.textContent = `Explore ${cloudData[currentFocus].center} options.`;
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
-function showTooltip(button, node) {
-  tooltip.textContent = getPreviewText(node);
-  tooltip.hidden = false;
 
-  const buttonRect = button.getBoundingClientRect();
-  const tooltipRect = tooltip.getBoundingClientRect();
+brandHome.addEventListener("click", renderOverview);
 
-  let left =
-    buttonRect.left +
-    buttonRect.width / 2 -
-    tooltipRect.width / 2;
-
-  let top =
-    buttonRect.top -
-    tooltipRect.height -
-    12;
-
-  const viewportPadding = 12;
-
-  left = Math.max(
-    viewportPadding,
-    Math.min(
-      left,
-      window.innerWidth - tooltipRect.width - viewportPadding
-    )
-  );
-
-  if (top < viewportPadding) {
-    top = buttonRect.bottom + 12;
-  }
-
-  tooltip.style.left = `${left}px`;
-  tooltip.style.top = `${top}px`;
-}
-
-function hideTooltip() {
-  tooltip.hidden = true;
-}
-
-function handleTouchNode(button, node) {
-  if (previewedTouchNode !== node.id) {
-    clearTouchSelection();
-    previewedTouchNode = node.id;
-    button.classList.add("is-previewed");
-    showPreview(node);
-    return;
-  }
-
-  previewedTouchNode = null;
-  handleNodeClick(node);
-}
-
-function clearTouchSelection() {
-  document
-    .querySelectorAll(".command-node.is-previewed")
-    .forEach((node) => {
-      node.classList.remove("is-previewed");
-    });
-
-  previewedTouchNode = null;
-}
-
-backButton.addEventListener("click", () => {
-  const previousFocus = focusHistory.pop();
-
-  if (!previousFocus) {
-    return;
-  }
-
-  hideTooltip();
-  currentFocus = previousFocus;
-  clearTouchSelection();
-  renderCloud();
-  clearPreview();
+window.addEventListener("resize", () => {
+  // Layered layout is CSS-driven; no geometry recalculation is required.
 });
 
-window.addEventListener("resize", hideTooltip);
-window.addEventListener("scroll", hideTooltip, true);
-
-loadKnowledgeMap();
+loadData().catch((error) => {
+  console.error(error);
+  areaGrid.innerHTML = `<p>Could not load the prototype data. Run the site through a local web server such as VS Code Live Server.</p>`;
+});

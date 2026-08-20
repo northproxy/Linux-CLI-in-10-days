@@ -17,28 +17,59 @@ The primary website interaction is a dynamic contextual knowledge cloud.
 Initial state:
 
 ```text
-                         grep
-              find                  ps
+                    Search
 
-        cd                                 curl
+      Reading text          Processes
 
-                        LINUX
+File operations      LINUX      Networking
 
-        pwd                                ss
+     Text processing      Permissions
 
-              ls                    chmod
-                       cat
+             Services & logs
 ```
 
 `LINUX` is the central node.
 
-Core commands appear around it.
+Human-readable functional areas appear around `LINUX` rather than a flat list of commands.
 
-A node is not just a link. It is an interactive knowledge point.
+Planned top-level functional areas:
 
-### Hover / tap preview
+```text
+Reading text
+Text processing
+Search
+File operations
+Permissions
+Processes
+Networking
+Services & logs
+```
 
-Hovering over a node shows:
+Commands belong under these descriptive areas. A node is not just a link. It is an interactive knowledge point.
+
+### Hover / tap preview and temporary focus
+
+On desktop, hovering a functional-area node creates a temporary focus scene rather than immediately changing navigation state.
+
+Validated interaction direction:
+
+```text
+normal root state
+LINUX + functional areas
+
+hover Reading text
+→ Reading text moves toward the visual center
+→ LINUX and the other root areas drift together in the opposite direction
+→ background areas gradually fade toward transparency
+→ Reading text commands appear as a temporary outward "tail"
+→ temporary parent-child lines move with the focused area
+```
+
+`LINUX` remains the global starting point, but it is not visually fixed during this temporary-focus animation. It stays readable as background context while the hovered functional area becomes the temporary local focus.
+
+Hovering a command may later reveal one further level of useful options or variants. Temporary expansion should normally stop after about two visible levels to avoid clutter.
+
+Hover/tap also shows:
 
 - the resulting command or syntax;
 - a short explanation of what it does.
@@ -52,7 +83,18 @@ Show all entries, including hidden files.
 
 ### Click / tap focus
 
-Clicking a node changes the focus.
+Clicking the temporarily focused area commits the navigation:
+
+```text
+temporary hover focus
+→ temporary command tail fades out
+→ hovered area completes its move to the center
+→ LINUX and the old root context fade out
+→ persistent focused view is rendered
+→ child commands appear in a clean radial layout
+```
+
+Hover expansion is temporary; click focus is persistent.
 
 Example:
 
@@ -131,6 +173,64 @@ A dynamic Command Cloud for discovering commands, options, syntax, outputs, and 
 A task-oriented route for users who know what they want to accomplish but do not know the command.
 
 Visual Cards and Instagram content are publishing outputs derived from these same concepts.
+
+## 4.1 Planned interactive learning layer
+
+After the core 10-day Learn Path and Command Cloud are stable, the website may add a contextual learning layer driven by the same knowledge base.
+
+The intended flow is:
+
+```text
+Explore
+→ Understand
+→ Try
+→ Check yourself
+```
+
+A focused command in the Command Cloud can feed three progressively more active learning modes:
+
+```text
+Command Cloud focus
+      ↓
+Learn by example
+      ↓
+Practice
+      ↓
+Challenge
+```
+
+### Learn by example
+
+Show short, contextual command examples for the current command or concept.
+
+Example:
+
+```text
+Linux → Reading text → tail
+
+tail app.log
+→ show the last lines
+
+tail -n 20 app.log
+→ show the last 20 lines
+
+tail -f app.log
+→ follow new lines
+```
+
+### Practice
+
+Ask the learner to complete a partially guided command, for example by choosing or entering the required option or argument.
+
+### Challenge
+
+Ask the learner to write the complete command for a concrete task, then compare it with accepted answers and show representative output or a short hint.
+
+The first prototype should use commands already learned, such as `grep`, `find`, and `tail`.
+
+This layer should remain safe and static for the first version: do not execute real shell commands in the browser. Use JSON-driven examples, accepted answers, expected output, and hints rendered by vanilla JavaScript.
+
+This is a planned extension and is **not required to complete the current v1 scope** unless it is explicitly promoted later.
 
 ## 5. Technical scope
 

@@ -112,25 +112,44 @@ Use `LESSON_TEMPLATE.md`.
 
 The primary website interaction is a contextual knowledge cloud.
 
-Initial idea:
+`LINUX` remains the global starting point. The first visible ring should use descriptive, human-readable functional areas rather than a flat list of commands or broad abstract labels.
+
+Current planned root direction:
 
 ```text
-                         grep
-              find                  ps
+                    Search
 
-        cd                                 curl
+      Reading text          Processes
 
-                        LINUX
+File operations      LINUX      Networking
 
-        pwd                                ss
+     Text processing      Permissions
 
-              ls                    chmod
-                       cat
+             Services & logs
 ```
 
-### Hover / tap
+Commands live below these areas. Do not populate future branches before the corresponding Learn Path material is introduced.
 
-Preview the next syntax and a short explanation.
+### Hover / tap preview and temporary focus
+
+On desktop, hovering a functional-area node uses a temporary-focus animation.
+
+Validated behavior:
+
+```text
+hover functional area
+→ area moves toward the visual center
+→ LINUX + the other root areas move together in the opposite direction
+→ background root areas gradually fade toward transparency
+→ the hovered area's child commands appear as a temporary command tail
+→ thin relationship lines remain attached to the moving hovered area
+```
+
+`LINUX` is the global starting point, but during temporary focus it may move with the old root context instead of remaining visually fixed.
+
+Hovering a command may later reveal one additional level of useful options or variants. Normally limit temporary hover expansion to about two visible levels so the graph remains readable.
+
+Hover/tap should also preview the next syntax and a short explanation.
 
 Example:
 
@@ -139,14 +158,27 @@ ls -a
 Show all entries, including hidden files.
 ```
 
-### Click / tap
+### Click / tap focus
 
-The selected node becomes the new center.
+Click commits the temporary focus rather than trying to morph the temporary command tail directly into the final layout.
+
+Preferred sequence:
+
+```text
+click temporarily focused area
+→ temporary child commands fade out
+→ focused area completes its move to the center
+→ LINUX / previous root context fade out
+→ persistent focused view is rendered
+→ child commands appear again in the normal radial layout
+```
+
+Hover focus is temporary; click focus is persistent.
 
 Example:
 
 ```text
-Linux → ls → -a / -l / -la / -h / -R
+Linux → Reading text → tail → -n N / -f
 ```
 
 ### Deeper context
@@ -171,14 +203,16 @@ Provide Back and/or breadcrumb context.
 Example:
 
 ```text
-Linux › ls › -l
+Linux › Reading text › tail
 ```
 
-Do not display the entire graph at once.
+### Mobile
 
-Show only a useful local context.
+Touch devices do not have hover. Preserve the validated first-tap preview / second-tap focus behavior and keep equivalent information available through tap interaction.
 
-Do not finalize a large data model until the small prototype works.
+Do not display the entire graph at once. Show only a useful local context.
+
+Do not finalize or populate a large data model before the relevant learning material is introduced.
 
 ## 7. Task-oriented discovery principle
 
@@ -495,8 +529,11 @@ Do not document every small action.
 Do not build the whole project in advance.
 
 The website concept is a dynamic Linux CLI Command Cloud:
-hover/tap previews a node, click/tap changes focus, and the local cloud
-rebuilds around the selected command or concept.
+`LINUX` is surrounded by descriptive functional areas; desktop hover creates a
+temporary local focus where the hovered area moves toward center, the previous
+root context drifts/fades, and child commands appear as a temporary tail.
+Click/tap commits the node as the persistent focus and rebuilds the local cloud
+around that command or concept.
 
 Every script must include the required project header from INSTRUCTIONS.md.
 

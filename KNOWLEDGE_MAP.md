@@ -14,29 +14,90 @@ The same knowledge should support:
 
 ## Primary interaction model — Command Cloud
 
-The website begins with Linux as the central concept.
+The website begins with `LINUX` as the central concept.
+
+The first ring should use descriptive functional areas rather than a flat command list.
 
 ```text
-                         grep
-              find                  ps
+                    Search
 
-        cd                                 curl
+      Reading text          Processes
 
-                        LINUX
+File operations      LINUX      Networking
 
-        pwd                                ss
+     Text processing      Permissions
 
-              ls                    chmod
-                       cat
+             Services & logs
 ```
 
-Commands around the center are smaller nodes.
+Commands live one level below these areas.
 
 The exact layout can change dynamically.
 
 The purpose is not to show every command at once.
 
 The purpose is to show a useful local context.
+
+
+## Temporary hover-focus model
+
+Desktop hover previews graph structure without immediately committing navigation.
+
+The validated root interaction is a temporary-focus scene:
+
+```text
+normal state
+
+             Reading text
+
+                 LINUX
+
+hover Reading text
+
+                 cat
+                    less
+        Reading text   head
+                       tail
+
+        LINUX + other root areas
+        drift away and fade
+```
+
+Behavior:
+
+```text
+hover functional area
+→ hovered area moves toward the visual center
+→ LINUX and non-hovered root areas move together in the opposite direction
+→ background root areas gradually fade toward transparency
+→ immediate child commands appear as a temporary outward command tail
+→ animated parent-child lines stay attached to the moving hovered area
+```
+
+`LINUX` remains the global starting point in the knowledge model, but during this temporary visual state it is allowed to move with the old root context.
+
+Clicking the temporarily focused area commits navigation using a deliberately simpler transition:
+
+```text
+temporary command tail fades out
+→ hovered area completes centering
+→ old LINUX/root context fades out
+→ persistent focused view is rendered
+→ child commands appear in the normal radial layout
+```
+
+Hover may later continue one level deeper, for example:
+
+```text
+Reading text
+  └── tail   ← hovered
+        ├── -n N
+        └── -f
+```
+
+Limit temporary hover expansion to about two visible levels so the graph remains calm and readable.
+
+On touch devices, preserve the validated first-tap preview / second-tap focus behavior rather than relying on hover. Revalidate touch behavior after the temporary-focus desktop interaction is generalized.
 
 ## Focus model
 
@@ -147,6 +208,11 @@ variant
 syntax
 output-concept
 related-concept
+example
+practice
+challenge
+expected-output
+hint
 ```
 
 These are conceptual categories, not yet a frozen JSON schema.
@@ -166,7 +232,30 @@ Show hidden files → ls -a
 ls -l → permissions
 ls -l → owner
 ls -l → size
+tail → example → tail -f app.log
+grep → challenge → Find ERROR lines and show line numbers
+challenge → accepted answer → grep -n ERROR app.log
+challenge → expected output
+challenge → hint
 ```
+
+## Interactive learning relationships
+
+The knowledge graph may later connect a command or concept to contextual learning material instead of maintaining a separate exercise database.
+
+```text
+command
+├── example
+├── practice
+└── challenge
+      ├── accepted answer
+      ├── expected output
+      └── hint
+```
+
+The same focused node should be reusable by the Command Cloud, Learn by example, Practice, and Challenge views.
+
+For the first prototype, keep the model deliberately small and validate it with already learned commands such as `grep`, `find`, and `tail`. Do not model every possible valid shell command in advance.
 
 ## Source of truth
 
@@ -186,7 +275,7 @@ Lessons should link to this knowledge instead of recreating large command descri
 
 ## Navigation principles
 
-- The current focus is visually dominant.
+- The current persistent focus is visually dominant; a hovered root area may temporarily become the dominant local focus before click.
 - Show only a useful local neighborhood.
 - Use font size, distance, and hierarchy to communicate importance.
 - Hover previews the next step.
